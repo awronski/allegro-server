@@ -1,0 +1,5 @@
+target/
+allegro-server.iml
+src/main/resources/application*.properties
+.idea/
+src/main/java/pl/allegro

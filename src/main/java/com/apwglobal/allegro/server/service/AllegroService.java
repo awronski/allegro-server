@@ -22,9 +22,6 @@ public class AllegroService {
     @Value("${alegro.key}")
     private String key;
 
-    @Value("${alegro.localVersion}")
-    private long localVersion;
-
     @Bean
     public IAllegroNiceApi allegro() {
         com.apwglobal.nice.service.Configuration conf = new com.apwglobal.nice.service.Configuration(country);

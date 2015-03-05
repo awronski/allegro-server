@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SpringCacheConfiguration implements CachingConfigurer {
 
+    private static final String LRU = "LRU";
+
     @Bean(destroyMethod="shutdown")
     public net.sf.ehcache.CacheManager ehCacheManager() {
 
@@ -26,7 +28,7 @@ public class SpringCacheConfiguration implements CachingConfigurer {
     private CacheConfiguration createCacheConfiguration(String cacheName, int maxEntries) {
         CacheConfiguration cacheConfiguration = new CacheConfiguration();
         cacheConfiguration.setName(cacheName);
-        cacheConfiguration.setMemoryStoreEvictionPolicy("LRU");
+        cacheConfiguration.setMemoryStoreEvictionPolicy(LRU);
         cacheConfiguration.setMaxEntriesLocalHeap(maxEntries);
         cacheConfiguration.setEternal(false);
         cacheConfiguration.setTimeToIdleSeconds(3 * 60);

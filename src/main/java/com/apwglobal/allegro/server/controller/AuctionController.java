@@ -1,5 +1,6 @@
 package com.apwglobal.allegro.server.controller;
 
+import com.apwglobal.allegro.server.db.AuctionMapper;
 import com.apwglobal.nice.domain.Auction;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class AuctionController {
     @Autowired
     private IAllegroNiceApi allegro;
 
+    @Autowired
+    private AuctionMapper auctionMapper;
+
     @ControllerAdvice
     static class JsonpAdvice extends AbstractJsonpResponseBodyAdvice {
         public JsonpAdvice() {
@@ -29,13 +33,7 @@ public class AuctionController {
     @RequestMapping("/auctions")
     @ResponseBody
     public List<Auction> journal() {
-        allegro.login();
-        return allegro
-                .getAuctions()
-                .toList()
-                .toBlocking()
-                .single();
-
+        return auctionMapper.getAllAuctions();
     }
 
 }

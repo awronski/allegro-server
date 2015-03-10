@@ -1,12 +1,13 @@
 package com.apwglobal.allegro.server.controller;
 
-import com.apwglobal.allegro.server.db.AuctionMapper;
+import com.apwglobal.allegro.server.db.AuctionDao;
 import com.apwglobal.nice.domain.Auction;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractJsonpResponseBodyAdvice;
@@ -20,7 +21,7 @@ public class AuctionController {
     private IAllegroNiceApi allegro;
 
     @Autowired
-    private AuctionMapper auctionMapper;
+    private AuctionDao auctionDao;
 
     @ControllerAdvice
     static class JsonpAdvice extends AbstractJsonpResponseBodyAdvice {
@@ -32,8 +33,14 @@ public class AuctionController {
     @Cacheable("auctions")
     @RequestMapping("/auctions")
     @ResponseBody
-    public List<Auction> journal() {
-        return auctionMapper.getAllAuctions();
+    public List<Auction> allAuctions() {
+        return auctionDao.getAllAuctions();
+    }
+
+    @RequestMapping("/auctions/{itemId}")
+    @ResponseBody
+    public Auction auctionById(@PathVariable("itemId") long itemId) {
+        return auctionDao.getAuctionById(itemId);
     }
 
 }

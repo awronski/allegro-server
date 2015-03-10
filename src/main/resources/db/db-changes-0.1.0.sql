@@ -8,9 +8,9 @@ CREATE TABLE auctions (
   itemId              BIGINT NOT NULL PRIMARY KEY,
   itemTitle           VARCHAR(64) NOT NULL,
   itemThumbnailUrl    VARCHAR(128),
-  itemStartQuantity   TIMESTAMP,
+  itemStartQuantity   INTEGER,
   itemSoldQuantity    INTEGER,
-  itemQuantityType    INTEGER,
+  itemQuantityType    VARCHAR(5),
   itemStartTime       TIMESTAMP,
   itemEndTime         TIMESTAMP,
   itemBiddersCounter  INTEGER,
@@ -22,4 +22,4 @@ CREATE TABLE auctions (
   shop                BOOL,
   payu                BOOL
 );
-ALTER TABLE auction OWNER TO alle;
+ALTER TABLE auctions OWNER TO alle;

@@ -17,7 +17,7 @@ public class LocalDateTimeModuleConfiguration {
     public static final String YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
 
     @Bean
-    public LocalDateTimeModule cos() {
+    public LocalDateTimeModule localDateTimeModule() {
         return new LocalDateTimeModule();
     }
 

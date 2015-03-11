@@ -2,7 +2,6 @@ package com.apwglobal.allegro.server.db;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedTypes;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -10,7 +9,6 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Date;
 
-@MappedTypes(LocalDateTime.class)
 public class LocalDateTypeHandler extends BaseTypeHandler<LocalDateTime> {
 
     @Override

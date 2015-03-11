@@ -27,8 +27,12 @@ public class DbConfiguration {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(dataSource);
         factoryBean.setMapperLocations(getResources());
-        factoryBean.setTypeHandlers(new TypeHandler[] {new LocalDateTypeHandler(), new OptionalLocalDateTypeHandler() } );
+        factoryBean.setTypeHandlers(getTypeHandlers());
         return factoryBean;
+    }
+
+    private TypeHandler[] getTypeHandlers() {
+        return new TypeHandler[] {new LocalDateTypeHandler(), new OptionalLocalDateTypeHandler() };
     }
 
     private Resource[] getResources() {

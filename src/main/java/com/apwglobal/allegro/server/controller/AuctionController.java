@@ -1,6 +1,6 @@
 package com.apwglobal.allegro.server.controller;
 
-import com.apwglobal.allegro.server.db.AuctionDao;
+import com.apwglobal.allegro.server.dao.AuctionDao;
 import com.apwglobal.nice.domain.Auction;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.springframework.beans.factory.annotation.Autowired;

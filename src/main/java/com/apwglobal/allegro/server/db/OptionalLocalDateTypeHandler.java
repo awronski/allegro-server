@@ -17,6 +17,8 @@ public class OptionalLocalDateTypeHandler extends BaseTypeHandler<Optional<Local
         if (parameter.isPresent()) {
             Date d = Date.from(parameter.get().atZone(ZoneOffset.systemDefault()).toInstant());
             ps.setTimestamp(i, new Timestamp(d.getTime()));
+        } else {
+            ps.setTimestamp(i, null);
         }
     }
 

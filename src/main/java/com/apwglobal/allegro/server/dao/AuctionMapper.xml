@@ -1,5 +1,5 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.apwglobal.allegro.server.db.AuctionDao">
+<mapper namespace="com.apwglobal.allegro.server.dao.AuctionDao">
 
     <select id="getAllAuctions" resultType="com.apwglobal.nice.domain.Auction">
         SELECT *
@@ -12,13 +12,14 @@
 
     <insert id="createAuction" parameterType="com.apwglobal.nice.domain.Auction" keyProperty="itemId">
         INSERT INTO auctions
-          (itemId, itemTitle, itemThumbnailUrl, itemStartQuantity,
-            itemSoldQuantity, itemQuantityType, itemStartTime, itemEndTime, itemBiddersCounter, itemCategoryId,
-            itemWatchersCounter, itemViewsCounter, itemNote, special, shop, payu)
-        VALUES
+        (itemId, itemTitle, itemThumbnailUrl, itemStartQuantity,
+         itemSoldQuantity, itemQuantityType, itemStartTime, itemEndTime, itemBiddersCounter, itemCategoryId,
+         itemWatchersCounter, itemViewsCounter, itemNote, special, shop, payu, price, priceType)
+        VALUES (
             #{itemId}, #{itemTitle}, #{itemThumbnailUrl}, #{itemStartQuantity}, #{itemSoldQuantity},
-              #{itemQuantityType}, #{itemStartTime}, #{itemEndTime}, #{itemBiddersCounter}, #{itemCategoryId},
-              #{itemWatchersCounter}, #{itemViewsCounter}, #{itemNote}, #{special}, #{shop}, #{payu}
+            #{itemQuantityType}, #{itemStartTime}, #{itemEndTime}, #{itemBiddersCounter}, #{itemCategoryId},
+            #{itemWatchersCounter}, #{itemViewsCounter}, #{itemNote}, #{special}, #{shop}, #{payu}, #{price}, #{priceType}
+        )
     </insert>
 
 </mapper>

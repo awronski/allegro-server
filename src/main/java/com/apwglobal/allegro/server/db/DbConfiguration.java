@@ -1,5 +1,6 @@
 package com.apwglobal.allegro.server.db;
 
+import com.apwglobal.allegro.server.dao.AuctionDao;
 import org.apache.ibatis.type.TypeHandler;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -14,7 +15,7 @@ import java.io.File;
 
 
 @Configuration
-@MapperScan(basePackages="com.apwglobal.allegro.server.db")
+@MapperScan(basePackages="com.apwglobal.allegro.server.dao")
 public class DbConfiguration {
 
     @Autowired

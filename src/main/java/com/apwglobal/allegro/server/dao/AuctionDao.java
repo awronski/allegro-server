@@ -1,4 +1,4 @@
-package com.apwglobal.allegro.server.db;
+package com.apwglobal.allegro.server.dao;
 
 import com.apwglobal.nice.domain.Auction;
 

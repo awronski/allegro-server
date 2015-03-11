@@ -60,6 +60,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.apwglobal</groupId>
             <artifactId>allegro-nice-api</artifactId>
             <version>0.1.0-SNAPSHOT</version>

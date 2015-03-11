@@ -22,4 +22,13 @@
         )
     </insert>
 
+    <update id="updateAuction" parameterType="com.apwglobal.nice.domain.Auction">
+      UPDATE auctions SET
+          itemSoldQuantity = #{itemSoldQuantity},
+              itemBiddersCounter = #{itemBiddersCounter},
+              itemWatchersCounter = #{itemWatchersCounter},
+              itemViewsCounter = #{itemViewsCounter}
+        WHERE itemId = #{itemId}
+    </update>
+
 </mapper>

@@ -7,10 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 @Service
 public class AuctionScheduler {
@@ -41,17 +39,10 @@ public class AuctionScheduler {
         return auctionDao.getAuctionById(a.getItemId()) != null;
     }
 
-    private void doAuctions(Predicate<Auction> predicate, Consumer<Auction> consumer) {
-        allegro.login();
-
-        List<Auction> auctionList = allegro
-                    .getAuctions()
-                    .toList()
-                    .toBlocking()
-                    .single();
-
-        auctionList
-                .stream()
+    private void doAuctions(Func1<Auction, Boolean> predicate, Action1<Auction> consumer) {
+        allegro
+                .login()
+                .getAuctions()
                 .filter(predicate)
                 .forEach(consumer);
     }

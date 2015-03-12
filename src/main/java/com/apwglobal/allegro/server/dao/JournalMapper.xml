@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.apwglobal.allegro.server.dao.JournalDao">
+
+
+    <select id="findLastRowId" resultType="java.util.Optional">
+        SELECT max(rowid) FROM journals
+    </select>
+
+    <insert id="createJournal">
+        INSERT INTO journals
+            (rowid, itemid, changetype, changedate, currentprice)
+        VALUES
+            (#{rowId}, #{itemId}, #{changeType}, #{changeDate}, #{currentPrice})
+    </insert>
+
+</mapper>

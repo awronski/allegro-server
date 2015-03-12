@@ -2,7 +2,7 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <logger name="org.springframework.web" level="INFO"/>
-
+    <logger name="org.springframework.boot.actuate.audit.listener.AuditListener" level="WARN"/>
     <logger name="com.apwglobal.allegro" level="DEBUG"/>
     <logger name="com.apwglobal.allegro.server.dao" level="INFO"/>
 

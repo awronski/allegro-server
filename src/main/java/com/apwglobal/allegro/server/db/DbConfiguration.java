@@ -1,6 +1,7 @@
 package com.apwglobal.allegro.server.db;
 
 import com.apwglobal.allegro.server.dao.AuctionDao;
+import com.apwglobal.allegro.server.dao.JournalDao;
 import org.apache.ibatis.type.TypeHandler;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -32,16 +33,25 @@ public class DbConfiguration {
     }
 
     private TypeHandler[] getTypeHandlers() {
-        return new TypeHandler[] {new LocalDateTypeHandler(), new OptionalLocalDateTypeHandler() };
+        return new TypeHandler[] {
+                new OptionalBasicTypesHandler(),
+        };
     }
 
     private Resource[] getResources() {
-        return new Resource[] { new ClassPathResource(
-                    new ClassPathResource(getMapperXMLPath(AuctionDao.class)).getPath()) };
+        return new Resource[]{
+                getMapper(AuctionDao.class),
+                getMapper(JournalDao.class),
+        };
     }
 
-    public static String getMapperXMLPath(Class<?> clazz) {
-        return new ClassPathResource(clazz.getName()
-                .replace(".", File.separator).replace("Dao", "Mapper").concat(".xml")).getPath();
+    private ClassPathResource getMapper(Class<?> clazz) {
+        return new ClassPathResource(
+                new ClassPathResource(
+                        clazz.getName()
+                                .replace(".", File.separator)
+                                .replace("Dao", "Mapper")
+                                .concat(".xml")
+                ).getPath());
     }
 }

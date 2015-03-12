@@ -17,7 +17,7 @@
          itemWatchersCounter, itemViewsCounter, itemNote, special, shop, payu, price, priceType)
         VALUES (
             #{itemId}, #{itemTitle}, #{itemThumbnailUrl}, #{itemStartQuantity}, #{itemSoldQuantity},
-            #{itemQuantityType}, #{itemStartTime}, #{itemEndTime}, #{itemBiddersCounter}, #{itemCategoryId},
+            #{itemQuantityType}, #{itemStartTime}, #{itemEndTime,jdbcType=TIMESTAMP}, #{itemBiddersCounter}, #{itemCategoryId},
             #{itemWatchersCounter}, #{itemViewsCounter}, #{itemNote}, #{special}, #{shop}, #{payu}, #{price}, #{priceType}
         )
     </insert>

@@ -19,6 +19,7 @@ public class AllegroExceptionHandler {
             logger.debug("Executing: {}", pjp.getSignature().getName());
             retVal = pjp.proceed();
         } catch (AllegroException e) {
+            //TODO add real exception handling, eg. relogin if session was invalidated etc
             logger.error("Executing: {}, error = {}, ex = {}", pjp.getSignature().getName(), e.getMessage(), e);
         }
         return retVal;

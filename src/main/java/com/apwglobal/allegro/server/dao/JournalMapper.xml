@@ -7,11 +7,17 @@
         SELECT max(rowid) FROM journals
     </select>
 
+    <select id="getLastJournals" parameterType="int" resultType="com.apwglobal.nice.domain.Journal">
+        SELECT * FROM journals
+        ORDER BY rowid DESC
+        LIMIT #{limit}
+    </select>
+
     <insert id="createJournal">
         INSERT INTO journals
             (rowid, itemid, changetype, changedate, currentprice)
         VALUES
-            (#{rowId}, #{itemId}, #{changeType}, #{changeDate}, #{currentPrice})
+            (#{rowId}, #{itemId}, #{changeType}, #{changeDate}, #{currentPrice,jdbcType=DOUBLE})
     </insert>
 
 </mapper>

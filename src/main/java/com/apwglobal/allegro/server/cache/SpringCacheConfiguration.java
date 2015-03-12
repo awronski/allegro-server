@@ -19,7 +19,7 @@ public class SpringCacheConfiguration implements CachingConfigurer {
     public net.sf.ehcache.CacheManager ehCacheManager() {
 
         net.sf.ehcache.config.Configuration config = new net.sf.ehcache.config.Configuration();
-        config.addCache(createCacheConfiguration("journal", 1));
+        config.addCache(createCacheConfiguration("journals", 1));
         config.addCache(createCacheConfiguration("auctions", 1));
 
         return net.sf.ehcache.CacheManager.newInstance(config);
@@ -31,8 +31,8 @@ public class SpringCacheConfiguration implements CachingConfigurer {
         cacheConfiguration.setMemoryStoreEvictionPolicy(LRU);
         cacheConfiguration.setMaxEntriesLocalHeap(maxEntries);
         cacheConfiguration.setEternal(false);
-        cacheConfiguration.setTimeToIdleSeconds(3 * 60);
-        cacheConfiguration.setTimeToLiveSeconds(3 * 60);
+        cacheConfiguration.setTimeToIdleSeconds(60);
+        cacheConfiguration.setTimeToLiveSeconds(60);
         return cacheConfiguration;
     }
 

@@ -21,6 +21,7 @@ public class SpringCacheConfiguration implements CachingConfigurer {
         net.sf.ehcache.config.Configuration config = new net.sf.ehcache.config.Configuration();
         config.addCache(createCacheConfiguration("journals", 1));
         config.addCache(createCacheConfiguration("auctions", 1));
+        config.addCache(createCacheConfiguration("deals", 1));
 
         return net.sf.ehcache.CacheManager.newInstance(config);
     }

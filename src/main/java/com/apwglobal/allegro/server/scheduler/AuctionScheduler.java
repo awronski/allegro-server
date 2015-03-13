@@ -19,7 +19,7 @@ public class AuctionScheduler {
     @Autowired
     private AuctionDao auctionDao;
 
-    @Scheduled(fixedDelay=2 * 60000)
+    @Scheduled(fixedDelay=9 * 60000)
     @Transactional
     public void syncAuctions() {
         doAuctions(
@@ -27,7 +27,7 @@ public class AuctionScheduler {
                 auctionDao::createAuction);
     }
 
-    @Scheduled(fixedDelay=3 * 60000)
+    @Scheduled(fixedDelay=11 * 60000)
     @Transactional
     public void updateAuctions() {
         doAuctions(

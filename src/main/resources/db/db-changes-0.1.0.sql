@@ -37,3 +37,17 @@ CREATE TABLE journals (
   currentPrice  DOUBLE PRECISION
 );
 ALTER TABLE journals OWNER TO alle;
+
+DROP TABLE IF EXISTS deals;
+CREATE TABLE deals (
+  eventId         BIGINT NOT NULL PRIMARY KEY,
+  dealType        VARCHAR(12) NOT NULL,
+  eventTime       TIMESTAMP NOT NULL,
+  id              BIGINT NOT NULL,
+  transactionId   BIGINT,
+  sellerId        INTEGER NOT NULL,
+  itemId          BIGINT NOT NULL,
+  buyerId         INTEGER NOT NULL,
+  quantity        INTEGER NOT NULL
+);
+ALTER TABLE deals OWNER TO alle;

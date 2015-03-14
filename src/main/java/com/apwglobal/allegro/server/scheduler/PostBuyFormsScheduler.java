@@ -42,10 +42,22 @@ public class PostBuyFormsScheduler {
     }
 
     private void createPostBuyForm(PostBuyForm f) {
+        createItems(f);
+        createAddresses(f);
+        postBuyFormDao.createPostBuyForm(f);
+    }
+
+    private void createAddresses(PostBuyForm f) {
         postBuyFormDao.createAddress(f.getOrderer());
         if (f.getOrderer() != f.getReceiver()) {
             postBuyFormDao.createAddress(f.getReceiver());
         }
-        postBuyFormDao.createPostBuyForm(f);
     }
+
+    private void createItems(PostBuyForm f) {
+        f.getItems()
+                .stream()
+                .forEach(postBuyFormDao::createItem);
+    }
+
 }

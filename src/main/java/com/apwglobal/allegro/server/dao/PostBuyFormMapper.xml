@@ -9,18 +9,47 @@
 
     <select id="getLastPostBuyForms" parameterType="int" resultMap="postBuyFormMap">
         SELECT
+
             p.*,
-            r.*,
-            o.*
+
+            r.id            AS r_id,
+            r.countryid     AS r_countryid,
+            r.street        AS r_street,
+            r.code          AS r_code,
+            r.city          AS r_city,
+            r.fullname      AS r_fullname,
+            r.company       AS r_company,
+            r.phone         AS r_phone,
+            r.nip           AS r_nip,
+
+            o.id            AS o_id,
+            o.countryid     AS o_countryid,
+            o.street        AS o_street,
+            o.code          AS o_code,
+            o.city          AS o_city,
+            o.fullname      AS o_fullname,
+            o.company       AS o_company,
+            o.phone         AS o_phone,
+            o.nip           AS o_nip,
+
+            i.id            AS item_id,
+            i.transactionid AS item_transactionid,
+            i.title         AS item_title,
+            i.country       AS item_country,
+            i.price         AS item_price,
+            i.quantity      AS item_quantity,
+            i.amount        AS item_amount
+
         FROM postbuyforms p
             INNER JOIN addresses r ON p.receiver_id = r.id
             INNER JOIN addresses o ON p.orderer_id = o.id
+            INNER JOIN items i ON p.transactionid = i.transactionid
         ORDER BY p.transactionid DESC
         LIMIT #{limit}
     </select>
 
     <resultMap id="postBuyFormMap" type="com.apwglobal.nice.domain.PostBuyForm">
-        <result property="transactionId" column="transactionId"/>
+        <id property="transactionId" column="transactionId"/>
         <result property="buyerId" column="buyerId"/>
         <result property="email" column="email"/>
         <result property="amount" column="amount"/>
@@ -31,22 +60,24 @@
         <result property="payId" column="payId"/>
         <result property="payStatus" column="payStatus"/>
         <result property="shipmentId" column="shipmentId"/>
-        <association property="receiver" column="receiver_id" foreignColumn="id" fetchType="eager" resultMap="receiverMap"/>
-        <association property="orderer" column="orderer_id" foreignColumn="id" fetchType="eager" resultMap="ordererMap"/>
+        <association property="receiver" column="receiver_id" foreignColumn="id" fetchType="eager"
+                     resultMap="addressMap" columnPrefix="r_"/>
+        <association property="orderer" column="orderer_id" foreignColumn="id" fetchType="eager"
+                     resultMap="addressMap" columnPrefix="o_"/>
+        <collection property="items" foreignColumn="transactionid" fetchType="eager"
+                    columnPrefix="item_" resultMap="itemsMap"/>
     </resultMap>
-    <resultMap id="receiverMap" type="com.apwglobal.nice.domain.Address">
-        <id column="id" jdbcType="BIGINT"/>
-        <result property="countryId" column="countryId"/>
-        <result property="street" column="street"/>
-        <result property="code" column="code"/>
-        <result property="city" column="city"/>
-        <result property="fullname" column="fullname"/>
-        <result property="company" column="company" jdbcType="VARCHAR"/>
-        <result property="phone" column="phone"/>
-        <result property="nip" column="nip" jdbcType="VARCHAR"/>
+    <resultMap id="itemsMap" type="com.apwglobal.nice.domain.Item">
+        <id property="id" column="id"/>
+        <result property="transactionId" column="transactionId"/>
+        <result property="title" column="title"/>
+        <result property="country" column="country"/>
+        <result property="price" column="price"/>
+        <result property="quantity" column="quantity"/>
+        <result property="amount" column="amount"/>
     </resultMap>
-    <resultMap id="ordererMap" type="com.apwglobal.nice.domain.Address">
-        <id column="id" jdbcType="BIGINT"/>
+    <resultMap id="addressMap" type="com.apwglobal.nice.domain.Address">
+        <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="countryId" column="countryId"/>
         <result property="street" column="street"/>
         <result property="code" column="code"/>
@@ -63,14 +94,20 @@
         </selectKey>
         INSERT INTO addresses
         (id, countryid, street, code, city, fullname, company, phone, nip)
-        VALUES (#{id}, #{countryId}, #{street}, #{code}, #{city}, #{fullname}, #{company,jdbcType=VARCHAR}, #{phone}, #{nip,jdbcType=VARCHAR})
+        VALUES (#{id}, #{countryId}, #{street}, #{code}, #{city}, #{fullname}, #{company,jdbcType=VARCHAR}, #{phone},
+        #{nip,jdbcType=VARCHAR})
     </insert>
-    <insert id="createPostBuyForm"  keyProperty="transactionId" keyColumn="transactionId">
+    <insert id="createPostBuyForm" keyProperty="transactionId" keyColumn="transactionId">
         INSERT INTO postbuyforms
         (transactionid, buyerid, email, amount, postageamount, paymentamount, withinvoice,
          msg, payid, paystatus, shipmentid, orderer_id, receiver_id)
         VALUES (#{transactionId}, #{buyerId}, #{email}, #{amount}, #{postageAmount}, #{paymentAmount}, #{withInvoice},
                 #{msg,jdbcType=VARCHAR}, #{payId}, #{payStatus}, #{shipmentId}, #{orderer.id}, #{receiver.id})
+    </insert>
+    <insert id="createItem">
+        INSERT INTO items
+        (id, transactionid, title, country, price, quantity, amount)
+        VALUES (#{id}, #{transactionId}, #{title}, #{country}, #{price}, #{quantity}, #{amount})
     </insert>
 
 </mapper>

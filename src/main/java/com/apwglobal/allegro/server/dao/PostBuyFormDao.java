@@ -2,6 +2,7 @@ package com.apwglobal.allegro.server.dao;
 
 import com.apwglobal.nice.domain.Address;
 import com.apwglobal.nice.domain.Deal;
+import com.apwglobal.nice.domain.Item;
 import com.apwglobal.nice.domain.PostBuyForm;
 
 import java.util.List;
@@ -14,5 +15,6 @@ public interface PostBuyFormDao {
 
     void createAddress(Address address);
     void createPostBuyForm(PostBuyForm form);
+    void createItem(Item item);
 
 }

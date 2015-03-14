@@ -83,3 +83,15 @@ CREATE TABLE postbuyforms (
   receiver_id   BIGINT REFERENCES addresses(id) NOT NULL
 );
 ALTER TABLE postbuyforms OWNER TO alle;
+
+DROP TABLE IF EXISTS items;
+CREATE TABLE items (
+  id            BIGINT NOT NULL PRIMARY KEY,
+  transactionId BIGINT NOT NULL,
+  title         VARCHAR(64) NOT NULL,
+  country       INTEGER NOT NULL,
+  price         DOUBLE PRECISION NOT NULL,
+  quantity      INTEGER NOT NULL,
+  amount        DOUBLE PRECISION NOT NULL
+);
+ALTER TABLE items OWNER TO alle;

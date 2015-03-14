@@ -13,7 +13,7 @@ public class OptionalBasicTypesHandler extends TypeReference<Optional> implement
     public void setParameter(PreparedStatement ps, int i, Optional parameter, JdbcType jdbcType) throws SQLException {
 
         if (jdbcType == null) {
-            throw new IllegalArgumentException("Cannot set value for Optional field without knowing jdbcType");
+            throw new IllegalArgumentException(String.format("Cannot set value for (%d) Optional field without knowing jdbcType", i));
         }
 
         if (parameter.isPresent()) {

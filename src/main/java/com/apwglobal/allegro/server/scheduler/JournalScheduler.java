@@ -20,7 +20,7 @@ public class JournalScheduler {
 
     @Scheduled(fixedDelay=5 * 60000)
     @Transactional
-    public void syncJournalAuctions() {
+    public void syncJournal() {
         Optional<Long> lastRawId = journalDao.findLastRowId();
 
         allegro

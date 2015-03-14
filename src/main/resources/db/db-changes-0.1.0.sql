@@ -43,7 +43,7 @@ CREATE TABLE deals (
   eventId         BIGINT NOT NULL PRIMARY KEY,
   dealType        VARCHAR(12) NOT NULL,
   eventTime       TIMESTAMP NOT NULL,
-  id              BIGINT NOT NULL,
+  dealId          BIGINT NOT NULL,
   transactionId   BIGINT,
   sellerId        INTEGER NOT NULL,
   itemId          BIGINT NOT NULL,
@@ -51,3 +51,35 @@ CREATE TABLE deals (
   quantity        INTEGER NOT NULL
 );
 ALTER TABLE deals OWNER TO alle;
+
+DROP TABLE IF EXISTS addresses;
+CREATE TABLE addresses (
+  id        SERIAL NOT NULL PRIMARY KEY,
+  countryId INTEGER NOT NULL,
+  street    VARCHAR(128) NOT NULL,
+  code      VARCHAR(16) NOT NULL,
+  city      VARCHAR(64) NOT NULL,
+  fullname  VARCHAR(128) NOT NULL,
+  company   VARCHAR(256),
+  phone     VARCHAR(32) NOT NULL,
+  nip       VARCHAR(32)
+);
+ALTER TABLE addresses OWNER TO alle;
+
+DROP TABLE IF EXISTS postbuyforms;
+CREATE TABLE postbuyforms (
+  transactionId BIGINT NOT NULL PRIMARY KEY,
+  buyerId       BIGINT NOT NULL,
+  email         VARCHAR(128) NOT NULL,
+  amount        DOUBLE PRECISION NOT NULL,
+  postageAmount DOUBLE PRECISION NOT NULL,
+  paymentAmount DOUBLE PRECISION NOT NULL,
+  withInvoice   BOOL NOT NULL,
+  msg           TEXT,
+  payId         BIGINT NOT NULL,
+  payStatus     VARCHAR(32) NOT NULL,
+  shipmentId    INTEGER NOT NULL,
+  orderer_id    BIGINT REFERENCES addresses(id),
+  receiver_id   BIGINT REFERENCES addresses(id) NOT NULL
+);
+ALTER TABLE postbuyforms OWNER TO alle;

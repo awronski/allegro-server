@@ -3,6 +3,7 @@ package com.apwglobal.allegro.server.db;
 import com.apwglobal.allegro.server.dao.AuctionDao;
 import com.apwglobal.allegro.server.dao.DealDao;
 import com.apwglobal.allegro.server.dao.JournalDao;
+import com.apwglobal.allegro.server.dao.PostBuyFormDao;
 import org.apache.ibatis.type.TypeHandler;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -44,6 +45,7 @@ public class DbConfiguration {
                 getMapper(AuctionDao.class),
                 getMapper(JournalDao.class),
                 getMapper(DealDao.class),
+                getMapper(PostBuyFormDao.class),
         };
     }
 

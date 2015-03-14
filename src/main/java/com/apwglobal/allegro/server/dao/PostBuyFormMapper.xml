@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.apwglobal.allegro.server.dao.PostBuyFormDao">
+
+    <select id="findLastTransactionId" resultType="java.util.Optional">
+        SELECT max(transactionid)
+        FROM postbuyforms
+    </select>
+
+    <select id="getLastPostBuyForms" parameterType="int" resultMap="postBuyFormMap">
+        SELECT
+            p.*,
+            r.*,
+            o.*
+        FROM postbuyforms p
+            INNER JOIN addresses r ON p.receiver_id = r.id
+            INNER JOIN addresses o ON p.orderer_id = o.id
+        ORDER BY p.transactionid DESC
+        LIMIT #{limit}
+    </select>
+
+    <resultMap id="postBuyFormMap" type="com.apwglobal.nice.domain.PostBuyForm">
+        <result property="transactionId" column="transactionId"/>
+        <result property="buyerId" column="buyerId"/>
+        <result property="email" column="email"/>
+        <result property="amount" column="amount"/>
+        <result property="postageAmount" column="postageAmount"/>
+        <result property="paymentAmount" column="paymentAmount"/>
+        <result property="withInvoice" column="withInvoice"/>
+        <result property="msg" column="msg"/>
+        <result property="payId" column="payId"/>
+        <result property="payStatus" column="payStatus"/>
+        <result property="shipmentId" column="shipmentId"/>
+        <association property="receiver" column="receiver_id" foreignColumn="id" fetchType="eager" resultMap="receiverMap"/>
+        <association property="orderer" column="orderer_id" foreignColumn="id" fetchType="eager" resultMap="ordererMap"/>
+    </resultMap>
+    <resultMap id="receiverMap" type="com.apwglobal.nice.domain.Address">
+        <id column="id" jdbcType="BIGINT"/>
+        <result property="countryId" column="countryId"/>
+        <result property="street" column="street"/>
+        <result property="code" column="code"/>
+        <result property="city" column="city"/>
+        <result property="fullname" column="fullname"/>
+        <result property="company" column="company" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone"/>
+        <result property="nip" column="nip" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="ordererMap" type="com.apwglobal.nice.domain.Address">
+        <id column="id" jdbcType="BIGINT"/>
+        <result property="countryId" column="countryId"/>
+        <result property="street" column="street"/>
+        <result property="code" column="code"/>
+        <result property="city" column="city"/>
+        <result property="fullname" column="fullname"/>
+        <result property="company" column="company" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone"/>
+        <result property="nip" column="nip" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="createAddress" keyProperty="id" keyColumn="id">
+        <selectKey keyProperty="id" resultType="long" order="BEFORE">
+            SELECT nextval('addresses_id_seq')
+        </selectKey>
+        INSERT INTO addresses
+        (id, countryid, street, code, city, fullname, company, phone, nip)
+        VALUES (#{id}, #{countryId}, #{street}, #{code}, #{city}, #{fullname}, #{company,jdbcType=VARCHAR}, #{phone}, #{nip,jdbcType=VARCHAR})
+    </insert>
+    <insert id="createPostBuyForm"  keyProperty="transactionId" keyColumn="transactionId">
+        INSERT INTO postbuyforms
+        (transactionid, buyerid, email, amount, postageamount, paymentamount, withinvoice,
+         msg, payid, paystatus, shipmentid, orderer_id, receiver_id)
+        VALUES (#{transactionId}, #{buyerId}, #{email}, #{amount}, #{postageAmount}, #{paymentAmount}, #{withInvoice},
+                #{msg,jdbcType=VARCHAR}, #{payId}, #{payStatus}, #{shipmentId}, #{orderer.id}, #{receiver.id})
+    </insert>
+
+</mapper>

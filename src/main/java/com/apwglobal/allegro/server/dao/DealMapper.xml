@@ -14,11 +14,20 @@
         LIMIT #{limit}
     </select>
 
+    <select id="getDealsAfter" parameterType="long" resultType="com.apwglobal.nice.domain.Deal">
+        SELECT *
+        FROM deals
+        WHERE transactionId IS NOT NULL
+              AND transactionid > #{transactionId}
+        ORDER BY transactionid DESC
+    </select>
+
     <insert id="createDeal">
         INSERT INTO deals
-        (eventid, dealtype, eventtime, id, transactionid, sellerid, itemid, buyerid, quantity)
+        (eventid, dealtype, eventtime, dealId, transactionid, sellerid, itemid, buyerid, quantity)
         VALUES
-            (#{eventId}, #{dealType}, #{eventTime}, #{id}, #{transactionId, jdbcType=BIGINT}, #{sellerId}, #{itemId}, #{buyerId}, #{quantity})
+            (#{eventId}, #{dealType}, #{eventTime}, #{dealId}, #{transactionId, jdbcType=BIGINT}, #{sellerId}, #{itemId}, #{buyerId},
+             #{quantity})
     </insert>
 
 </mapper>

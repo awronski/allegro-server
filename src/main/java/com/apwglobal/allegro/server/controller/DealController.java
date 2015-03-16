@@ -1,9 +1,7 @@
 package com.apwglobal.allegro.server.controller;
 
-import com.apwglobal.allegro.server.dao.DealDao;
-import com.apwglobal.allegro.server.dao.JournalDao;
+import com.apwglobal.allegro.server.service.IDealService;
 import com.apwglobal.nice.domain.Deal;
-import com.apwglobal.nice.domain.Journal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
@@ -19,7 +17,7 @@ import java.util.List;
 public class DealController {
 
     @Autowired
-    private DealDao dealDao;
+    private IDealService dealService;
 
     @ControllerAdvice
     static class JsonpAdvice extends AbstractJsonpResponseBodyAdvice {
@@ -32,7 +30,7 @@ public class DealController {
     @RequestMapping("/deals")
     @ResponseBody
     public List<Deal> journal(@RequestParam(value="limit",required=false,defaultValue="100") int limit) {
-        return dealDao.getLastDeals(limit);
+        return dealService.getLastDeals(limit);
     }
 
 }

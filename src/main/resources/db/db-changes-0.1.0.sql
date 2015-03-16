@@ -55,7 +55,7 @@ ALTER TABLE deals OWNER TO alle;
 DROP TABLE IF EXISTS addresses;
 CREATE TABLE addresses (
   id        SERIAL NOT NULL PRIMARY KEY,
-  countryId INTEGER NOT NULL,
+  country   VARCHAR(32) NOT NULL,
   street    VARCHAR(128) NOT NULL,
   code      VARCHAR(16) NOT NULL,
   city      VARCHAR(64) NOT NULL,
@@ -89,7 +89,6 @@ CREATE TABLE items (
   id            BIGINT NOT NULL PRIMARY KEY,
   transactionId BIGINT NOT NULL,
   title         VARCHAR(64) NOT NULL,
-  country       INTEGER NOT NULL,
   price         DOUBLE PRECISION NOT NULL,
   quantity      INTEGER NOT NULL,
   amount        DOUBLE PRECISION NOT NULL

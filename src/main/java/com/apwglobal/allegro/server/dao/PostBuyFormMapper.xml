@@ -13,7 +13,7 @@
             p.*,
 
             r.id            AS r_id,
-            r.countryid     AS r_countryid,
+            r.country       AS r_country,
             r.street        AS r_street,
             r.code          AS r_code,
             r.city          AS r_city,
@@ -23,7 +23,7 @@
             r.nip           AS r_nip,
 
             o.id            AS o_id,
-            o.countryid     AS o_countryid,
+            o.country       AS o_country,
             o.street        AS o_street,
             o.code          AS o_code,
             o.city          AS o_city,
@@ -35,7 +35,6 @@
             i.id            AS item_id,
             i.transactionid AS item_transactionid,
             i.title         AS item_title,
-            i.country       AS item_country,
             i.price         AS item_price,
             i.quantity      AS item_quantity,
             i.amount        AS item_amount
@@ -71,14 +70,13 @@
         <id property="id" column="id"/>
         <result property="transactionId" column="transactionId"/>
         <result property="title" column="title"/>
-        <result property="country" column="country"/>
         <result property="price" column="price"/>
         <result property="quantity" column="quantity"/>
         <result property="amount" column="amount"/>
     </resultMap>
     <resultMap id="addressMap" type="com.apwglobal.nice.domain.Address">
         <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="countryId" column="countryId"/>
+        <result property="country" column="country"/>
         <result property="street" column="street"/>
         <result property="code" column="code"/>
         <result property="city" column="city"/>
@@ -93,8 +91,8 @@
             SELECT nextval('addresses_id_seq')
         </selectKey>
         INSERT INTO addresses
-        (id, countryid, street, code, city, fullname, company, phone, nip)
-        VALUES (#{id}, #{countryId}, #{street}, #{code}, #{city}, #{fullname}, #{company,jdbcType=VARCHAR}, #{phone},
+        (id, country, street, code, city, fullname, company, phone, nip)
+        VALUES (#{id}, #{country}, #{street}, #{code}, #{city}, #{fullname}, #{company,jdbcType=VARCHAR}, #{phone},
         #{nip,jdbcType=VARCHAR})
     </insert>
     <insert id="createPostBuyForm" keyProperty="transactionId" keyColumn="transactionId">
@@ -106,8 +104,8 @@
     </insert>
     <insert id="createItem">
         INSERT INTO items
-        (id, transactionid, title, country, price, quantity, amount)
-        VALUES (#{id}, #{transactionId}, #{title}, #{country}, #{price}, #{quantity}, #{amount})
+        (id, transactionid, title, price, quantity, amount)
+        VALUES (#{id}, #{transactionId}, #{title}, #{price}, #{quantity}, #{amount})
     </insert>
 
 </mapper>

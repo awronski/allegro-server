@@ -10,6 +10,6 @@ public interface JournalDao {
     Optional<Long> findLastRowId();
     List<Journal> getLastJournals(int limit);
 
-    void createJournal(Journal journal);
+    void saveJournal(Journal journal);
 
 }

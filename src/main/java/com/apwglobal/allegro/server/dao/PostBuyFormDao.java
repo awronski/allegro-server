@@ -13,8 +13,8 @@ public interface PostBuyFormDao {
     Optional<Long> findLastTransactionId();
     List<PostBuyForm> getLastPostBuyForms(int limit);
 
-    void createAddress(Address address);
-    void createPostBuyForm(PostBuyForm form);
-    void createItem(Item item);
+    void saveAddress(Address address);
+    void savePostBuyForm(PostBuyForm form);
+    void saveItem(Item item);
 
 }

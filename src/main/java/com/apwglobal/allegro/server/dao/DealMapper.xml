@@ -22,7 +22,7 @@
         ORDER BY transactionid DESC
     </select>
 
-    <insert id="createDeal">
+    <insert id="saveDeal">
         INSERT INTO deals
         (eventid, dealtype, eventtime, dealId, transactionid, sellerid, itemid, buyerid, quantity)
         VALUES

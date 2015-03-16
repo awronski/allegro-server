@@ -26,7 +26,7 @@ public class JournalScheduler {
         allegro
                 .login()
                 .getJournal(lastRawId.orElse(0l))
-                .forEach(journalDao::createJournal);
+                .forEach(journalDao::saveJournal);
     }
 
 }

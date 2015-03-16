@@ -8,7 +8,7 @@ public interface AuctionDao {
 
     List<Auction> getAllAuctions();
     Auction getAuctionById(long itemId);
-    void createAuction(Auction auction);
+    void saveAuction(Auction auction);
     void updateAuction(Auction auction);
 
 }

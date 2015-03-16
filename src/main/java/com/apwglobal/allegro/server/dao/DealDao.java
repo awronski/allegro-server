@@ -11,6 +11,6 @@ public interface DealDao {
     Optional<Long> findLastRowId();
     List<Deal> getLastDeals(int limit);
     List<Deal> getDealsAfter(long transactionId);
-    void createDeal(Deal deal);
+    void saveDeal(Deal deal);
 
 }

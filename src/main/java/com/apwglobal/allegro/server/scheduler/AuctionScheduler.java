@@ -24,7 +24,7 @@ public class AuctionScheduler {
     public void syncAuctions() {
         doAuctions(
                 a -> !exists(a),
-                auctionDao::createAuction);
+                auctionDao::saveAuction);
     }
 
     @Scheduled(fixedDelay=11 * 60000)

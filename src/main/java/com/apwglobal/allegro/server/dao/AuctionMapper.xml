@@ -10,7 +10,7 @@
         SELECT * FROM auctions WHERE itemId = #{itemId}
     </select>
 
-    <insert id="createAuction" parameterType="com.apwglobal.nice.domain.Auction" keyProperty="itemId">
+    <insert id="saveAuction" parameterType="com.apwglobal.nice.domain.Auction" keyProperty="itemId">
         INSERT INTO auctions
         (itemId, itemTitle, itemThumbnailUrl, itemStartQuantity,
          itemSoldQuantity, itemQuantityType, itemStartTime, itemEndTime, itemBiddersCounter, itemCategoryId,

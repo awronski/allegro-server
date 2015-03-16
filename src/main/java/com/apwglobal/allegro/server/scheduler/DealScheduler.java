@@ -26,7 +26,7 @@ public class DealScheduler {
         allegro
                 .login()
                 .getDeals(lastEventId.orElse(0l))
-                .forEach(dealDao::createDeal);
+                .forEach(dealDao::saveDeal);
     }
 
 }

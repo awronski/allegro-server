@@ -2,6 +2,7 @@ package com.apwglobal.allegro.server.scheduler;
 
 import com.apwglobal.allegro.server.dao.DealDao;
 import com.apwglobal.allegro.server.dao.PostBuyFormDao;
+import com.apwglobal.allegro.server.service.IPostBuyFormsService;
 import com.apwglobal.nice.domain.Deal;
 import com.apwglobal.nice.domain.PostBuyForm;
 import com.apwglobal.nice.service.IAllegroNiceApi;
@@ -21,7 +22,7 @@ public class PostBuyFormsScheduler {
     private IAllegroNiceApi allegro;
 
     @Autowired
-    private PostBuyFormDao postBuyFormDao;
+    private IPostBuyFormsService postBuyFormsService;
 
     @Autowired
     private DealDao dealDao;
@@ -30,7 +31,7 @@ public class PostBuyFormsScheduler {
     @Transactional
     public void syncPostBuyForms() {
 
-        Optional<Long> transactionId = postBuyFormDao.findLastTransactionId();
+        Optional<Long> transactionId = postBuyFormsService.findLastTransactionId();
         List<Deal> deals = transactionId
                 .map(dealDao::getDealsAfter)
                 .orElse(dealDao.getDealsAfter(0));
@@ -38,26 +39,7 @@ public class PostBuyFormsScheduler {
         allegro
                 .login()
                 .getPostBuyForms(Observable.from(deals))
-                .forEach(this::createPostBuyForm);
-    }
-
-    private void createPostBuyForm(PostBuyForm f) {
-        createItems(f);
-        createAddresses(f);
-        postBuyFormDao.createPostBuyForm(f);
-    }
-
-    private void createAddresses(PostBuyForm f) {
-        postBuyFormDao.createAddress(f.getOrderer());
-        if (f.getOrderer() != f.getReceiver()) {
-            postBuyFormDao.createAddress(f.getReceiver());
-        }
-    }
-
-    private void createItems(PostBuyForm f) {
-        f.getItems()
-                .stream()
-                .forEach(postBuyFormDao::createItem);
+                .forEach(postBuyFormsService::savePostBuyForm);
     }
 
 }

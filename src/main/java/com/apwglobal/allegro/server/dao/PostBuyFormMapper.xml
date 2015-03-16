@@ -86,7 +86,7 @@
         <result property="nip" column="nip" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <insert id="createAddress" keyProperty="id" keyColumn="id">
+    <insert id="saveAddress" keyProperty="id" keyColumn="id">
         <selectKey keyProperty="id" resultType="long" order="BEFORE">
             SELECT nextval('addresses_id_seq')
         </selectKey>
@@ -95,14 +95,14 @@
         VALUES (#{id}, #{country}, #{street}, #{code}, #{city}, #{fullname}, #{company,jdbcType=VARCHAR}, #{phone},
         #{nip,jdbcType=VARCHAR})
     </insert>
-    <insert id="createPostBuyForm" keyProperty="transactionId" keyColumn="transactionId">
+    <insert id="savePostBuyForm" keyProperty="transactionId" keyColumn="transactionId">
         INSERT INTO postbuyforms
         (transactionid, buyerid, email, amount, postageamount, paymentamount, withinvoice,
          msg, payid, paystatus, shipmentid, orderer_id, receiver_id)
         VALUES (#{transactionId}, #{buyerId}, #{email}, #{amount}, #{postageAmount}, #{paymentAmount}, #{withInvoice},
                 #{msg,jdbcType=VARCHAR}, #{payId}, #{payStatus}, #{shipmentId}, #{orderer.id}, #{receiver.id})
     </insert>
-    <insert id="createItem">
+    <insert id="saveItem">
         INSERT INTO items
         (id, transactionid, title, price, quantity, amount)
         VALUES (#{id}, #{transactionId}, #{title}, #{price}, #{quantity}, #{amount})

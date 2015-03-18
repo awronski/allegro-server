@@ -1,6 +1,6 @@
 package com.apwglobal.allegro.server.controller;
 
-import com.apwglobal.allegro.server.dao.JournalDao;
+import com.apwglobal.allegro.server.service.IJournalService;
 import com.apwglobal.nice.domain.Journal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,7 +17,7 @@ import java.util.List;
 public class JournalController {
 
     @Autowired
-    private JournalDao journalDao;
+    private IJournalService journalService;
 
     @ControllerAdvice
     static class JsonpAdvice extends AbstractJsonpResponseBodyAdvice {
@@ -30,7 +30,7 @@ public class JournalController {
     @RequestMapping("/journals")
     @ResponseBody
     public List<Journal> journal(@RequestParam(value="limit",required=false,defaultValue="50") int limit) {
-        return journalDao.getLastJournals(limit);
+        return journalService.getLastJournals(limit);
     }
 
 }

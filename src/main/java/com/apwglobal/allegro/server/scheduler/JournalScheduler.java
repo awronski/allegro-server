@@ -1,6 +1,7 @@
 package com.apwglobal.allegro.server.scheduler;
 
 import com.apwglobal.allegro.server.dao.JournalDao;
+import com.apwglobal.allegro.server.service.IJournalService;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,17 +17,17 @@ public class JournalScheduler {
     private IAllegroNiceApi allegro;
 
     @Autowired
-    private JournalDao journalDao;
+    private IJournalService journalService;
 
     @Scheduled(fixedDelay=5 * 60000)
     @Transactional
     public void syncJournal() {
-        Optional<Long> lastRawId = journalDao.findLastRowId();
+        Optional<Long> lastRawId = journalService.findLastRowId();
 
         allegro
                 .login()
                 .getJournal(lastRawId.orElse(0l))
-                .forEach(journalDao::saveJournal);
+                .forEach(journalService::saveJournal);
     }
 
 }

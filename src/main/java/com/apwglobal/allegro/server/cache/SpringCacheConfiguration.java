@@ -23,19 +23,24 @@ public class SpringCacheConfiguration implements CachingConfigurer {
         config.addCache(createCacheConfiguration("auctions", 1));
         config.addCache(createCacheConfiguration("deals", 1));
         config.addCache(createCacheConfiguration("forms", 1));
+        config.addCache(createCacheConfiguration("form-fields", 100, 3600));
 
         return net.sf.ehcache.CacheManager.newInstance(config);
     }
 
-    private CacheConfiguration createCacheConfiguration(String cacheName, int maxEntries) {
+    private CacheConfiguration createCacheConfiguration(String cacheName, int maxEntries, int ttl) {
         CacheConfiguration cacheConfiguration = new CacheConfiguration();
         cacheConfiguration.setName(cacheName);
         cacheConfiguration.setMemoryStoreEvictionPolicy(LRU);
         cacheConfiguration.setMaxEntriesLocalHeap(maxEntries);
         cacheConfiguration.setEternal(false);
-        cacheConfiguration.setTimeToIdleSeconds(60);
-        cacheConfiguration.setTimeToLiveSeconds(60);
+        cacheConfiguration.setTimeToIdleSeconds(ttl);
+        cacheConfiguration.setTimeToLiveSeconds(ttl);
         return cacheConfiguration;
+    }
+
+    private CacheConfiguration createCacheConfiguration(String cacheName, int maxEntries) {
+        return createCacheConfiguration(cacheName, maxEntries, 60);
     }
 
     @Bean

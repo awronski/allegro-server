@@ -1,8 +1,6 @@
 package com.apwglobal.allegro.server.service;
 
-import com.apwglobal.nice.domain.Auction;
-import com.apwglobal.nice.domain.ChangedQty;
-import com.apwglobal.nice.domain.FinishAuctionFailure;
+import com.apwglobal.nice.domain.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,5 +14,6 @@ public interface IAuctionService {
 
     ChangedQty changeQty(long itemId, int newQty);
     List<FinishAuctionFailure> finishAuctions(List<Long> itemsIds);
+    CreatedAuction createNewAuction(List<NewAuctionField> fields);
 
 }

@@ -1,6 +1,7 @@
 package com.apwglobal.allegro.server.service;
 
 import com.apwglobal.allegro.server.dao.AuctionDao;
+import com.apwglobal.allegro.server.exception.ResourceNotFoundException;
 import com.apwglobal.nice.domain.Auction;
 import com.apwglobal.nice.domain.ChangedQty;
 import com.apwglobal.nice.service.IAllegroNiceApi;
@@ -53,7 +54,7 @@ public class AuctionService implements IAuctionService {
     @Override
     public ChangedQty changeQty(long itemId, int newQty) {
         if (!getAuctionById(itemId).isPresent()) {
-            throw new IllegalStateException("404");
+            throw new ResourceNotFoundException();
         }
 
         return allegro.changeQty(itemId, newQty);

@@ -10,17 +10,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AllegroServiceConfiguration {
 
-    @Value("${alegro.username}")
+    @Value("${allegro.username}")
     private String username;
 
-    @Value("${alegro.password}")
+    @Value("${allegro.password}")
     private String password;
 
-    @Value("${alegro.country}")
+    @Value("${allegro.country}")
     private int country;
 
-    @Value("${alegro.key}")
+    @Value("${allegro.key}")
     private String key;
+
+    @Value("${allegro.sandbox}")
+    private Boolean test;
 
     @Bean
     public IAllegroNiceApi allegro() {
@@ -29,8 +32,8 @@ public class AllegroServiceConfiguration {
         return new AllegroNiceApi.Builder()
                 .conf(conf)
                 .cred(cred)
+                .test(test)
                 .build();
     }
-
 
 }

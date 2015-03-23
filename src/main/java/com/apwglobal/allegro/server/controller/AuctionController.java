@@ -55,7 +55,7 @@ public class AuctionController {
 
     @RequestMapping(value = "/auctions/create", method = RequestMethod.POST)
     @ResponseBody
-    public CreatedAuction create(@RequestParam("newAuctionField") List<NewAuctionField> fields) {
+    public CreatedAuction create(@RequestBody List<NewAuctionField> fields) {
         return auctionService.createNewAuction(fields);
     }
 

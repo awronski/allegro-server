@@ -36,7 +36,7 @@ public class AuctionScheduler {
     }
 
     private boolean exists(Auction a) {
-        return auctionService.getAuctionById(a.getItemId()) != null;
+        return auctionService.getAuctionById(a.getItemId()).isPresent();
     }
 
     private void doAuctions(Func1<Auction, Boolean> predicate, Action1<Auction> consumer) {

@@ -4,6 +4,7 @@ import com.apwglobal.allegro.server.dao.AuctionDao;
 import com.apwglobal.allegro.server.exception.ResourceNotFoundException;
 import com.apwglobal.nice.domain.Auction;
 import com.apwglobal.nice.domain.ChangedQty;
+import com.apwglobal.nice.domain.FinishAuctionFailure;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +58,23 @@ public class AuctionService implements IAuctionService {
             throw new ResourceNotFoundException();
         }
 
-        return allegro.changeQty(itemId, newQty);
+        ChangedQty changedQty = allegro.changeQty(itemId, newQty);
+        logger.debug("Changed qty: {}", changedQty);
+
+        //TODO update auction in db
+
+        return changedQty;
+    }
+
+    @Override
+    public List<FinishAuctionFailure> finishAuctions(List<Long> itemsIds) {
+        logger.debug("Finishing auctions: {}", itemsIds);
+        List<FinishAuctionFailure> failures = allegro.finishAuctions(itemsIds);
+        logger.debug("Finished auctions failures: {}", failures);
+
+        //TODO update auction in db
+
+        return failures;
     }
 
 }

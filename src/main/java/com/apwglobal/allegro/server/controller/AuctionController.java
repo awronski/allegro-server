@@ -3,6 +3,7 @@ package com.apwglobal.allegro.server.controller;
 import com.apwglobal.allegro.server.service.IAuctionService;
 import com.apwglobal.nice.domain.Auction;
 import com.apwglobal.nice.domain.ChangedQty;
+import com.apwglobal.nice.domain.FinishAuctionFailure;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -46,6 +47,12 @@ public class AuctionController {
     @ResponseBody
     public ChangedQty changeQty(@PathVariable("itemId") long itemId, @RequestParam("newQty") int newQty) {
         return auctionService.changeQty(itemId, newQty);
+    }
+
+    @RequestMapping(value = "/auctions/finish", method = RequestMethod.PUT)
+    @ResponseBody
+    public List<FinishAuctionFailure> finish(@RequestParam("itemsIds") List<Long> itemsIds) {
+        return auctionService.finishAuctions(itemsIds);
     }
 
 }

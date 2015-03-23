@@ -1,18 +1,17 @@
 package com.apwglobal.allegro.server.controller;
 
-import com.apwglobal.allegro.server.dao.AuctionDao;
+import com.apwglobal.allegro.server.service.IAuctionService;
 import com.apwglobal.nice.domain.Auction;
+import com.apwglobal.nice.domain.ChangedQty;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractJsonpResponseBodyAdvice;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class AuctionController {
@@ -21,7 +20,7 @@ public class AuctionController {
     private IAllegroNiceApi allegro;
 
     @Autowired
-    private AuctionDao auctionDao;
+    private IAuctionService auctionService;
 
     @ControllerAdvice
     static class JsonpAdvice extends AbstractJsonpResponseBodyAdvice {
@@ -34,13 +33,19 @@ public class AuctionController {
     @RequestMapping("/auctions")
     @ResponseBody
     public List<Auction> allAuctions() {
-        return auctionDao.getAllAuctions();
+        return auctionService.getAllAuctions();
     }
 
     @RequestMapping("/auctions/{itemId}")
     @ResponseBody
-    public Auction auctionById(@PathVariable("itemId") long itemId) {
-        return auctionDao.getAuctionById(itemId);
+    public Optional<Auction> auctionById(@PathVariable("itemId") long itemId) {
+        return auctionService.getAuctionById(itemId);
+    }
+
+    @RequestMapping(value = "/auctions/{itemId}/changeQty", method = RequestMethod.PUT)
+    @ResponseBody
+    public ChangedQty changeQty(@PathVariable("itemId") long itemId, @RequestParam("newQty") int newQty) {
+        return auctionService.changeQty(itemId, newQty);
     }
 
 }

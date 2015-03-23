@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
+import java.text.SimpleDateFormat;
 
 @Configuration
 public class Jdk8ModuleConfiguration {
@@ -16,6 +17,7 @@ public class Jdk8ModuleConfiguration {
     @PostConstruct
     public void setup() {
         mapper.registerModule(new Jdk8Module());
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ"));
     }
 
 }

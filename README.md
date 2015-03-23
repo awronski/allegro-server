@@ -24,6 +24,10 @@ It give rest api for:
 - createing new auctions
 - canceling new auctions
 
+## Requirements
+- Java 8
+- Postgres 9
+
 ## Installation
 
 ### Clone repo

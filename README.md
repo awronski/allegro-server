@@ -2,10 +2,48 @@
 This is alternative allegro server that synchronize with the original one and share the data via the rests controllers.
 Because it stores the data locally it is fast and reliable.
 
-## Install
+# What does it do?
+It synchronize data with allegro including:
+- transaction journals:
+ - new auction
+ - change auction
+ - end auction
+ - buy
+ - cancel
+- deals journals:
+ - clients orders
+ - clients payments
+ - clients data for shipping and invoices
+- auctions statistics
+
+It give rest api for:
+- searching and retriving:
+ - journals
+ - deals
+ - auctions
+- createing new auctions
+- canceling new auctions
+
+## Installation
+
+### Clone repo
 ```
 git clone https://github.com/awronski/allegro-server.git
-cd allegro-server
+```
+
+### Create user and database
+```sql
+CREATE USER alle;
+ALTER ROLE alle PASSWORD 'password';
+CREATE DATABASE alledb OWNER alle ENCODING = 'UTF-8';
+```
+Create schema from ```src/resources/db/db_postgres.sqldb```
+
+### Set configuration
+Rename file ```application.template``` to ```application.properties``` and change settings.
+
+### Start server
+```
 mvn package && java -jar target/allegro-server-0.1.0.jar
 ```
 

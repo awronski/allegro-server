@@ -1,9 +1,9 @@
 package com.apwglobal.allegro.server.service;
 
 import com.apwglobal.allegro.server.dao.AuctionDao;
-import com.apwglobal.allegro.server.dao.JournalDao;
 import com.apwglobal.nice.domain.Auction;
-import com.apwglobal.nice.domain.Journal;
+import com.apwglobal.nice.domain.ChangedQty;
+import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,9 @@ public class AuctionService implements IAuctionService {
     @Autowired
     private AuctionDao auctionDao;
 
+    @Autowired
+    private IAllegroNiceApi allegro;
+
 
     @Override
     public List<Auction> getAllAuctions() {
@@ -29,8 +32,8 @@ public class AuctionService implements IAuctionService {
     }
 
     @Override
-    public Auction getAuctionById(long itemId) {
-        return auctionDao.getAuctionById(itemId);
+    public Optional<Auction> getAuctionById(long itemId) {
+        return Optional.ofNullable(auctionDao.getAuctionById(itemId));
     }
 
     @Override
@@ -46,4 +49,14 @@ public class AuctionService implements IAuctionService {
 
         logger.debug("Updated: {}", auction);
     }
+
+    @Override
+    public ChangedQty changeQty(long itemId, int newQty) {
+        if (!getAuctionById(itemId).isPresent()) {
+            throw new IllegalStateException("404");
+        }
+
+        return allegro.changeQty(itemId, newQty);
+    }
+
 }

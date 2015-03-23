@@ -14,7 +14,8 @@ security.user.name=admin
 security.user.password=secret
 management.security.role=SUPERUSER
 
-alegro.username=username
-alegro.password=password!
-alegro.country=1
-alegro.key=key
+allegro.username=username
+allegro.password=password!
+allegro.country=1
+allegro.key=key
+allegro.sandbox=false

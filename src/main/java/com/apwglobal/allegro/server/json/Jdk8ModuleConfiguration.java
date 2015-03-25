@@ -17,7 +17,7 @@ public class Jdk8ModuleConfiguration {
     @PostConstruct
     public void setup() {
         mapper.registerModule(new Jdk8Module());
-        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ"));
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
     }
 
 }

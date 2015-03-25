@@ -31,7 +31,7 @@ public class PostBuyFormController {
     @Cacheable("forms")
     @RequestMapping("/forms")
     @ResponseBody
-    public List<PostBuyForm> journal(@RequestParam(value="limit",required=false,defaultValue="50") int limit) {
+    public List<PostBuyForm> postBuyForms(@RequestParam(value = "limit", required = false, defaultValue = "50") int limit) {
         return postBuyFormDao.getLastPostBuyForms(limit);
     }
 

@@ -1,16 +1,12 @@
 package com.apwglobal.allegro.server.controller;
 
-import com.apwglobal.allegro.server.dao.JournalDao;
 import com.apwglobal.allegro.server.dao.PostBuyFormDao;
-import com.apwglobal.nice.domain.Journal;
+import com.apwglobal.nice.command.SearchPostBuyForm;
 import com.apwglobal.nice.domain.PostBuyForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractJsonpResponseBodyAdvice;
 
 import java.util.List;
@@ -33,6 +29,12 @@ public class PostBuyFormController {
     @ResponseBody
     public List<PostBuyForm> postBuyForms(@RequestParam(value = "limit", required = false, defaultValue = "50") int limit) {
         return postBuyFormDao.getLastPostBuyForms(limit);
+    }
+
+    @RequestMapping(value = "/forms/search", method = RequestMethod.POST)
+    @ResponseBody
+    public List<PostBuyForm> search(@RequestBody SearchPostBuyForm s) {
+        return postBuyFormDao.getLastPostBuyForms(s.getLimit().orElse(50));
     }
 
 }

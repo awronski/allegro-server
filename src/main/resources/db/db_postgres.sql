@@ -169,7 +169,7 @@ CREATE TABLE postbuyforms (
     msg text,
     payid bigint NOT NULL,
     paystatus character varying(32) NOT NULL,
-    shipmentid integer NOT NULL,
+    shipment varchar(96) NOT NULL,
     orderer_id bigint,
     receiver_id bigint NOT NULL
 );

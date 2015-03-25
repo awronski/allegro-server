@@ -4,6 +4,8 @@ import com.apwglobal.allegro.server.dao.AuctionDao;
 import com.apwglobal.allegro.server.dao.DealDao;
 import com.apwglobal.allegro.server.dao.JournalDao;
 import com.apwglobal.allegro.server.dao.PostBuyFormDao;
+import com.apwglobal.nice.domain.Shipment;
+import org.apache.ibatis.type.EnumOrdinalTypeHandler;
 import org.apache.ibatis.type.TypeHandler;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;

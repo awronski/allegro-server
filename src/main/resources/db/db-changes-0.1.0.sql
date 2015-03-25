@@ -78,7 +78,7 @@ CREATE TABLE postbuyforms (
   msg           TEXT,
   payId         BIGINT NOT NULL,
   payStatus     VARCHAR(32) NOT NULL,
-  shipmentId    INTEGER NOT NULL,
+  shipment      VARCHAR(96) NOT NULL,
   orderer_id    BIGINT REFERENCES addresses(id),
   receiver_id   BIGINT REFERENCES addresses(id) NOT NULL
 );

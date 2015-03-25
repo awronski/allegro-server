@@ -58,7 +58,7 @@
         <result property="msg" column="msg"/>
         <result property="payId" column="payId"/>
         <result property="payStatus" column="payStatus"/>
-        <result property="shipmentId" column="shipmentId"/>
+        <result property="shipment" column="shipment"/>
         <association property="receiver" column="receiver_id" foreignColumn="id" fetchType="eager"
                      resultMap="addressMap" columnPrefix="r_"/>
         <association property="orderer" column="orderer_id" foreignColumn="id" fetchType="eager"
@@ -98,9 +98,9 @@
     <insert id="savePostBuyForm" keyProperty="transactionId" keyColumn="transactionId">
         INSERT INTO postbuyforms
         (transactionid, buyerid, email, amount, postageamount, paymentamount, withinvoice,
-         msg, payid, paystatus, shipmentid, orderer_id, receiver_id)
+         msg, payid, paystatus, shipment, orderer_id, receiver_id)
         VALUES (#{transactionId}, #{buyerId}, #{email}, #{amount}, #{postageAmount}, #{paymentAmount}, #{withInvoice},
-                #{msg,jdbcType=VARCHAR}, #{payId}, #{payStatus}, #{shipmentId}, #{orderer.id}, #{receiver.id})
+                #{msg,jdbcType=VARCHAR}, #{payId}, #{payStatus}, #{shipment}, #{orderer.id}, #{receiver.id})
     </insert>
     <insert id="saveItem">
         INSERT INTO items

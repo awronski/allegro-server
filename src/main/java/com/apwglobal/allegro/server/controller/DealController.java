@@ -29,7 +29,7 @@ public class DealController {
     @Cacheable("deals")
     @RequestMapping("/deals")
     @ResponseBody
-    public List<Deal> journal(@RequestParam(value="limit",required=false,defaultValue="100") int limit) {
+    public List<Deal> deals(@RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
         return dealService.getLastDeals(limit);
     }
 

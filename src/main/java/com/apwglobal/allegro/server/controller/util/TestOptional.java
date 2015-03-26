@@ -18,4 +18,8 @@ public class TestOptional {
         return !o.isPresent() || v.compareTo(o.get()) <= 0;
     }
 
+    public static boolean exist(Optional<Boolean> o, Optional v) {
+        return !o.isPresent() || (o.get() == v.isPresent());
+    }
+
 }

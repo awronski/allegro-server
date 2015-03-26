@@ -7,38 +7,39 @@
         FROM postbuyforms
     </select>
 
+    <sql id="postBuyFormColumns">
+        p.*,
+
+        r.id            AS r_id,
+        r.country       AS r_country,
+        r.street        AS r_street,
+        r.code          AS r_code,
+        r.city          AS r_city,
+        r.fullname      AS r_fullname,
+        r.company       AS r_company,
+        r.phone         AS r_phone,
+        r.nip           AS r_nip,
+
+        o.id            AS o_id,
+        o.country       AS o_country,
+        o.street        AS o_street,
+        o.code          AS o_code,
+        o.city          AS o_city,
+        o.fullname      AS o_fullname,
+        o.company       AS o_company,
+        o.phone         AS o_phone,
+        o.nip           AS o_nip,
+
+        i.id            AS item_id,
+        i.transactionid AS item_transactionid,
+        i.title         AS item_title,
+        i.price         AS item_price,
+        i.quantity      AS item_quantity,
+        i.amount        AS item_amount
+    </sql>
+
     <select id="getLastPostBuyForms" parameterType="int" resultMap="postBuyFormMap">
-        SELECT
-
-            p.*,
-
-            r.id            AS r_id,
-            r.country       AS r_country,
-            r.street        AS r_street,
-            r.code          AS r_code,
-            r.city          AS r_city,
-            r.fullname      AS r_fullname,
-            r.company       AS r_company,
-            r.phone         AS r_phone,
-            r.nip           AS r_nip,
-
-            o.id            AS o_id,
-            o.country       AS o_country,
-            o.street        AS o_street,
-            o.code          AS o_code,
-            o.city          AS o_city,
-            o.fullname      AS o_fullname,
-            o.company       AS o_company,
-            o.phone         AS o_phone,
-            o.nip           AS o_nip,
-
-            i.id            AS item_id,
-            i.transactionid AS item_transactionid,
-            i.title         AS item_title,
-            i.price         AS item_price,
-            i.quantity      AS item_quantity,
-            i.amount        AS item_amount
-
+        SELECT <include refid="postBuyFormColumns"/>
         FROM postbuyforms p
             INNER JOIN addresses r ON p.receiver_id = r.id
             INNER JOIN addresses o ON p.orderer_id = o.id
@@ -46,11 +47,28 @@
         ORDER BY p.transactionid DESC
         LIMIT #{limit}
     </select>
+    <select id="getPostBuyFormsBetween" parameterType="map" resultMap="postBuyFormMap">
+        SELECT <include refid="postBuyFormColumns"/>
+        FROM postbuyforms p
+        INNER JOIN addresses r ON p.receiver_id = r.id
+        INNER JOIN addresses o ON p.orderer_id = o.id
+        INNER JOIN items i ON p.transactionid = i.transactionid
+        <where>
+            <if test="from.isPresent()">
+                "date" &gt;= #{from,jdbcType=TIMESTAMP}
+            </if>
+            <if test="to.isPresent()">
+                AND "date" &lt;= #{to,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+        ORDER BY p.transactionid DESC
+    </select>
 
     <resultMap id="postBuyFormMap" type="com.apwglobal.nice.domain.PostBuyForm">
         <id property="transactionId" column="transactionId"/>
         <result property="buyerId" column="buyerId"/>
         <result property="email" column="email"/>
+        <result property="date" column="date"/>
         <result property="amount" column="amount"/>
         <result property="postageAmount" column="postageAmount"/>
         <result property="paymentAmount" column="paymentAmount"/>
@@ -97,9 +115,9 @@
     </insert>
     <insert id="savePostBuyForm" keyProperty="transactionId" keyColumn="transactionId">
         INSERT INTO postbuyforms
-        (transactionid, buyerid, email, amount, postageamount, paymentamount, withinvoice,
+        (transactionid, buyerid, email, "date", amount, postageamount, paymentamount, withinvoice,
          msg, payid, paystatus, shipment, orderer_id, receiver_id)
-        VALUES (#{transactionId}, #{buyerId}, #{email}, #{amount}, #{postageAmount}, #{paymentAmount}, #{withInvoice},
+        VALUES (#{transactionId}, #{buyerId}, #{email}, #{date}, #{amount}, #{postageAmount}, #{paymentAmount}, #{withInvoice},
                 #{msg,jdbcType=VARCHAR}, #{payId}, #{payStatus}, #{shipment}, #{orderer.id}, #{receiver.id})
     </insert>
     <insert id="saveItem">

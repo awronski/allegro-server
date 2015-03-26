@@ -71,6 +71,7 @@ CREATE TABLE postbuyforms (
   transactionId BIGINT NOT NULL PRIMARY KEY,
   buyerId       BIGINT NOT NULL,
   email         VARCHAR(128) NOT NULL,
+  "date"        TIMESTAMP NOT NULL,
   amount        DOUBLE PRECISION NOT NULL,
   postageAmount DOUBLE PRECISION NOT NULL,
   paymentAmount DOUBLE PRECISION NOT NULL,

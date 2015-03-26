@@ -1,5 +1,6 @@
 package com.apwglobal.allegro.server.controller;
 
+import com.apwglobal.allegro.server.controller.util.TestOptional;
 import com.apwglobal.allegro.server.service.IJournalService;
 import com.apwglobal.nice.command.SearchJournal;
 import com.apwglobal.nice.domain.Journal;
@@ -12,6 +13,9 @@ import org.springframework.web.servlet.mvc.method.annotation.AbstractJsonpRespon
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.apwglobal.allegro.server.controller.util.TestOptional.*;
+import static java.util.stream.Collectors.*;
 
 @Controller
 public class JournalController {
@@ -40,26 +44,12 @@ public class JournalController {
     public List<Journal> search(@RequestBody SearchJournal s) {
         return journalService.getLastJournals(s.getLimit().orElse(SEARCH_LIMIT))
                 .stream()
-                .filter(j -> testEquals(s.getItemId(), j.getItemId()))
-                .filter(j -> testEquals(s.getRowId(), j.getRowId()))
-                .filter(j -> testEquals(s.getChangeType(), j.getChangeType()))
-                .filter(j -> testGe(s.getFrom(), j.getChangeDate()))
-                .filter(j -> testLe(s.getTo(), j.getChangeDate()))
-                .collect(Collectors.toList());
-    }
-
-    private boolean testEquals(Optional o, Object v) {
-        return !o.isPresent() || o.get().equals(v);
-    }
-
-    @SuppressWarnings("unchecked")
-    private boolean testGe(Optional<? extends Comparable> o, Comparable v) {
-        return !o.isPresent() || v.compareTo(o.get()) >= 0;
-    }
-
-    @SuppressWarnings("unchecked")
-    private boolean testLe(Optional<? extends Comparable> o, Comparable v) {
-        return !o.isPresent() || v.compareTo(o.get()) <= 0;
+                .filter(j -> eq(s.getItemId(), j.getItemId()))
+                .filter(j -> eq(s.getRowId(), j.getRowId()))
+                .filter(j -> eq(s.getChangeType(), j.getChangeType()))
+                .filter(j -> ge(s.getFrom(), j.getChangeDate()))
+                .filter(j -> le(s.getTo(), j.getChangeDate()))
+                .collect(toList());
     }
 
 }

@@ -80,16 +80,6 @@ public class AuctionService implements IAuctionService {
         List<FinishAuctionFailure> failures = allegro.finishAuctions(itemsIds);
         logger.debug("Finished auctions failures: {}", failures);
 
-        List<Long> failedItems = failures
-                .stream()
-                .map(FinishAuctionFailure::getItemId)
-                .collect(toList());
-
-        itemsIds
-                .stream()
-                .filter(id -> !failedItems.contains(id))
-                .forEach(this::closeAuction);
-
         return failures;
     }
 
@@ -103,9 +93,17 @@ public class AuctionService implements IAuctionService {
         return newAuction;
     }
 
+
+
+
     @Override
     public AuctionStatus getAuctionStatusById(long itemId) {
         return auctionDao.getAuctionStatusById(itemId);
+    }
+
+    @Override
+    public List<AuctionStatus> getAuctionStatusesByStatus(AuctionStatusType status) {
+        return auctionDao.getAuctionStatusesByStatus(status);
     }
 
     @Override

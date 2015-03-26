@@ -1,6 +1,5 @@
 package com.apwglobal.allegro.server.scheduler;
 
-import com.apwglobal.allegro.server.dao.JournalDao;
 import com.apwglobal.allegro.server.service.IJournalService;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.springframework.beans.factory.annotation.Autowired;

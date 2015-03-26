@@ -14,6 +14,9 @@
     <select id="getAuctionStatusById" parameterType="long" resultType="com.apwglobal.nice.domain.AuctionStatus">
         SELECT * FROM auctions_statuses WHERE itemId = #{itemId}
     </select>
+    <select id="getAuctionStatusesByStatus" resultType="com.apwglobal.nice.domain.AuctionStatus">
+        SELECT * FROM auctions_statuses WHERE status = #{status}
+    </select>
 
     <insert id="saveAuction" parameterType="com.apwglobal.nice.domain.Auction" keyProperty="Id">
         INSERT INTO auctions

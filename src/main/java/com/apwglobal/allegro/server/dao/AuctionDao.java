@@ -2,6 +2,7 @@ package com.apwglobal.allegro.server.dao;
 
 import com.apwglobal.nice.domain.Auction;
 import com.apwglobal.nice.domain.AuctionStatus;
+import com.apwglobal.nice.domain.AuctionStatusType;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ public interface AuctionDao {
     void updateAuction(Auction auction);
 
     AuctionStatus getAuctionStatusById(long itemId);
+    List<AuctionStatus> getAuctionStatusesByStatus(AuctionStatusType status);
     void saveAuctionStatus(AuctionStatus status);
     void closeAuctionStatus(long itemId);
 

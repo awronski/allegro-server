@@ -17,6 +17,8 @@ public interface IAuctionService {
     CreatedAuction createNewAuction(List<NewAuctionField> fields);
 
     AuctionStatus getAuctionStatusById(long itemId);
+    List<AuctionStatus> getAuctionStatusesByStatus(AuctionStatusType status);
+
     void closeAuction(long itemId);
 
 }

@@ -2,6 +2,8 @@ package com.apwglobal.allegro.server.scheduler;
 
 import com.apwglobal.allegro.server.service.IAuctionService;
 import com.apwglobal.nice.domain.Auction;
+import com.apwglobal.nice.domain.AuctionStatus;
+import com.apwglobal.nice.domain.AuctionStatusType;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -9,6 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rx.functions.Action1;
 import rx.functions.Func1;
+
+import java.util.List;
+
+import static com.apwglobal.nice.domain.AuctionStatusType.*;
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class AuctionScheduler {
@@ -45,6 +52,34 @@ public class AuctionScheduler {
                 .getAuctions()
                 .filter(predicate)
                 .forEach(consumer);
+    }
+
+
+
+    @Scheduled(fixedDelay=1 * 60000)
+    @Transactional
+    public void closeAuctions() {
+        List<Long> inDb  = auctionService.getAuctionStatusesByStatus(OPEN)
+                .stream()
+                .map(AuctionStatus::getItemId)
+                .collect(toList());
+
+        if (inDb.isEmpty()) {
+            return;
+        }
+
+        List<Long> inAllegro = allegro
+                .login()
+                .getAuctions()
+                .map(Auction::getId)
+                .toList()
+                .toBlocking()
+                .single();
+
+        inDb
+                .stream()
+                .filter(a -> !inAllegro.contains(a))
+                .forEach(auctionService::closeAuction);
     }
 
 }

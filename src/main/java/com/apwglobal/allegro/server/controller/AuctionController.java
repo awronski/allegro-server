@@ -59,4 +59,10 @@ public class AuctionController {
         return auctionService.createNewAuction(fields);
     }
 
+    @RequestMapping("/auctions/status")
+    @ResponseBody
+    public AuctionStatus status(@RequestParam("itemId") long itemId) {
+        return auctionService.getAuctionStatusById(itemId);
+    }
+
 }

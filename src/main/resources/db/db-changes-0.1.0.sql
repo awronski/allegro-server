@@ -6,27 +6,34 @@ CREATE DATABASE alledb OWNER alle ENCODING = 'UTF-8';
 
 DROP TABLE IF EXISTS auctions;
 CREATE TABLE auctions (
-  itemId              BIGINT NOT NULL PRIMARY KEY,
-  itemTitle           VARCHAR(64) NOT NULL,
-  itemThumbnailUrl    VARCHAR(128),
-  itemStartQuantity   INTEGER NOT NULL,
-  itemSoldQuantity    INTEGER NOT NULL,
-  itemQuantityType    VARCHAR(5) NOT NULL,
-  itemStartTime       TIMESTAMP NOT NULL,
-  itemEndTime         TIMESTAMP,
-  itemBiddersCounter  INTEGER NOT NULL,
-  itemCategoryId      INTEGER NOT NULL,
-  itemWatchersCounter INTEGER NOT NULL,
-  itemViewsCounter    INTEGER NOT NULL,
-  itemNote            VARCHAR(1024),
-  special             BOOL NOT NULL,
-  shop                BOOL NOT NULL,
-  payu                BOOL NOT NULL,
-  price               DOUBLE PRECISION NOT NULL,
-  priceType           VARCHAR(8) NOT NULL
+  id              BIGINT NOT NULL PRIMARY KEY,
+  title           VARCHAR(64) NOT NULL,
+  thumbnailUrl    VARCHAR(128),
+  startQuantity   INTEGER NOT NULL,
+  soldQuantity    INTEGER NOT NULL,
+  quantityType    VARCHAR(5) NOT NULL,
+  startTime       TIMESTAMP NOT NULL,
+  endTime         TIMESTAMP,
+  biddersCounter  INTEGER NOT NULL,
+  categoryId      INTEGER NOT NULL,
+  watchersCounter INTEGER NOT NULL,
+  viewsCounter    INTEGER NOT NULL,
+  note            VARCHAR(1024),
+  special         BOOL NOT NULL,
+  shop            BOOL NOT NULL,
+  payu            BOOL NOT NULL,
+  price           DOUBLE PRECISION NOT NULL,
+  priceType       VARCHAR(8) NOT NULL
 );
 ALTER TABLE auctions OWNER TO alle;
 
+DROP TABLE IF EXISTS auctions_statuses;
+CREATE TABLE auctions_statuses (
+  itemId      BIGINT NOT NULL PRIMARY KEY REFERENCES auctions(id),
+  ref         VARCHAR(8) NOT NULL,
+  status      VARCHAR(6) NOT NULL
+);
+ALTER TABLE auctions_statuses OWNER TO alle;
 
 DROP TABLE IF EXISTS journals;
 CREATE TABLE journals (

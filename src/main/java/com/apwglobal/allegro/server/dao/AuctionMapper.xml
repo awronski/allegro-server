@@ -4,30 +4,49 @@
     <select id="getAllAuctions" resultType="com.apwglobal.nice.domain.Auction">
         SELECT *
         FROM auctions
+        ORDER BY id ASC
     </select>
 
     <select id="getAuctionById" parameterType="long" resultType="com.apwglobal.nice.domain.Auction">
-        SELECT * FROM auctions WHERE itemId = #{itemId}
+        SELECT * FROM auctions WHERE id = #{id}
     </select>
 
-    <insert id="saveAuction" parameterType="com.apwglobal.nice.domain.Auction" keyProperty="itemId">
+    <select id="getAuctionStatusById" parameterType="long" resultType="com.apwglobal.nice.domain.AuctionStatus">
+        SELECT * FROM auctions_statuses WHERE itemId = #{itemId}
+    </select>
+
+    <insert id="saveAuction" parameterType="com.apwglobal.nice.domain.Auction" keyProperty="Id">
         INSERT INTO auctions
-        (itemId, itemTitle, itemThumbnailUrl, itemStartQuantity,
-         itemSoldQuantity, itemQuantityType, itemStartTime, itemEndTime, itemBiddersCounter, itemCategoryId,
-         itemWatchersCounter, itemViewsCounter, itemNote, special, shop, payu, price, priceType)
+        (id, title, thumbnailUrl, startQuantity,
+         soldQuantity, quantityType, startTime, endTime, biddersCounter, categoryId,
+         watchersCounter, viewsCounter, note, special, shop, payu, price, priceType)
         VALUES (
-            #{itemId}, #{itemTitle}, #{itemThumbnailUrl}, #{itemStartQuantity}, #{itemSoldQuantity},
-            #{itemQuantityType}, #{itemStartTime}, #{itemEndTime,jdbcType=TIMESTAMP}, #{itemBiddersCounter}, #{itemCategoryId},
-            #{itemWatchersCounter}, #{itemViewsCounter}, #{itemNote}, #{special}, #{shop}, #{payu}, #{price}, #{priceType}
+            #{id}, #{title}, #{thumbnailUrl}, #{startQuantity}, #{soldQuantity},
+            #{quantityType}, #{startTime}, #{endTime,jdbcType=TIMESTAMP}, #{biddersCounter}, #{categoryId},
+            #{watchersCounter}, #{viewsCounter}, #{note}, #{special}, #{shop}, #{payu}, #{price}, #{priceType}
         )
     </insert>
 
     <update id="updateAuction" parameterType="com.apwglobal.nice.domain.Auction">
       UPDATE auctions SET
-          itemSoldQuantity = #{itemSoldQuantity},
-              itemBiddersCounter = #{itemBiddersCounter},
-              itemWatchersCounter = #{itemWatchersCounter},
-              itemViewsCounter = #{itemViewsCounter}
+          soldQuantity = #{soldQuantity},
+              biddersCounter = #{biddersCounter},
+              watchersCounter = #{watchersCounter},
+              viewsCounter = #{viewsCounter}
+        WHERE id = #{id}
+    </update>
+
+
+
+    <insert id="saveAuctionStatus" parameterType="com.apwglobal.nice.domain.AuctionStatus" keyProperty="itemId">
+        INSERT INTO auctions_statuses
+        (itemId, ref, status)
+        VALUES (#{itemId}, #{ref}, #{status})
+    </insert>
+
+    <update id="closeAuctionStatus" parameterType="com.apwglobal.nice.domain.AuctionStatus">
+        UPDATE auctions_statuses SET
+            status = 'CLOSE'
         WHERE itemId = #{itemId}
     </update>
 

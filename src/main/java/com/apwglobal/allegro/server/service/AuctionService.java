@@ -12,6 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.apwglobal.nice.domain.AuctionStatusType.*;
+import static java.util.stream.Collectors.*;
 
 @Service
 @Transactional
@@ -38,7 +42,13 @@ public class AuctionService implements IAuctionService {
 
     @Override
     public void saveAuction(Auction auction) {
+        AuctionStatus status = new AuctionStatus.Builder()
+                .itemId(auction.getId())
+                .status(OPEN)
+                .ref("?")
+                .build();
         auctionDao.saveAuction(auction);
+        auctionDao.saveAuctionStatus(status);
 
         logger.debug("Saved: {}", auction);
     }
@@ -70,7 +80,15 @@ public class AuctionService implements IAuctionService {
         List<FinishAuctionFailure> failures = allegro.finishAuctions(itemsIds);
         logger.debug("Finished auctions failures: {}", failures);
 
-        //TODO update auction in db
+        List<Long> failedItems = failures
+                .stream()
+                .map(FinishAuctionFailure::getItemId)
+                .collect(toList());
+
+        itemsIds
+                .stream()
+                .filter(id -> !failedItems.contains(id))
+                .forEach(this::closeAuction);
 
         return failures;
     }
@@ -84,4 +102,16 @@ public class AuctionService implements IAuctionService {
 
         return newAuction;
     }
+
+    @Override
+    public AuctionStatus getAuctionStatusById(long itemId) {
+        return auctionDao.getAuctionStatusById(itemId);
+    }
+
+    @Override
+    public void closeAuction(long itemId) {
+        auctionDao.closeAuctionStatus(itemId);
+        logger.debug("Finished: {}", itemId);
+    }
+
 }

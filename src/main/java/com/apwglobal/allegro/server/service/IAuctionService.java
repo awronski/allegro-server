@@ -16,4 +16,7 @@ public interface IAuctionService {
     List<FinishAuctionFailure> finishAuctions(List<Long> itemsIds);
     CreatedAuction createNewAuction(List<NewAuctionField> fields);
 
+    AuctionStatus getAuctionStatusById(long itemId);
+    void closeAuction(long itemId);
+
 }

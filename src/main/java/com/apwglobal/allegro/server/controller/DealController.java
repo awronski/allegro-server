@@ -33,4 +33,10 @@ public class DealController {
         return dealService.getLastDeals(limit);
     }
 
+    @RequestMapping("/deals/after")
+    @ResponseBody
+    public List<Deal> dealsAfter(@RequestParam(value = "transactionId", required = true) long transactionId) {
+        return dealService.getDealsAfter(transactionId);
+    }
+
 }

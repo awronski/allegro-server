@@ -19,7 +19,7 @@
         FROM deals
         WHERE transactionId IS NOT NULL
               AND transactionid > #{transactionId}
-        ORDER BY transactionid DESC
+        ORDER BY transactionid ASC
     </select>
 
     <insert id="saveDeal">

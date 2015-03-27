@@ -28,11 +28,10 @@ public class AuctionController {
         }
     }
 
-    @Cacheable("auctions")
     @RequestMapping("/auctions")
     @ResponseBody
-    public List<Auction> allAuctions() {
-        return auctionService.getAllAuctions();
+    public List<Auction> auctions(@RequestParam(value = "limit", required = false) Optional<Integer> limit) {
+        return auctionService.getAuctions(limit);
     }
 
     @RequestMapping("/auctions/{itemId}")

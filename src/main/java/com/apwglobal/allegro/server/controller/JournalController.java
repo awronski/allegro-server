@@ -32,7 +32,6 @@ public class JournalController {
         }
     }
 
-    @Cacheable("journals")
     @RequestMapping("/journals")
     @ResponseBody
     public List<Journal> journal(@RequestParam(value = "limit", required = false, defaultValue = "50") int limit) {

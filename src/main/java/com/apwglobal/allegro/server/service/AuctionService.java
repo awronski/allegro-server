@@ -4,6 +4,7 @@ import com.apwglobal.allegro.server.dao.AuctionDao;
 import com.apwglobal.allegro.server.exception.ResourceNotFoundException;
 import com.apwglobal.nice.domain.*;
 import com.apwglobal.nice.service.IAllegroNiceApi;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.apwglobal.nice.domain.AuctionStatusType.*;
-import static java.util.stream.Collectors.*;
 
 @Service
 @Transactional
@@ -31,8 +30,8 @@ public class AuctionService implements IAuctionService {
 
 
     @Override
-    public List<Auction> getAllAuctions() {
-        return auctionDao.getAllAuctions();
+    public List<Auction> getAuctions(Optional<Integer> limit) {
+        return auctionDao.getAuctions(limit);
     }
 
     @Override

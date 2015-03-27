@@ -15,14 +15,16 @@ It synchronize data with allegro including:
  - clients payments
  - clients data for shipping and invoices
 - auctions statistics
+- payments (post buy forms)
 
 It give rest api for:
 - searching and retriving:
  - journals
  - deals
  - auctions
-- createing new auctions
-- canceling new auctions
+ - payments
+- creating new auctions
+- closing auctions
 
 ## Requirements
 - Java 8

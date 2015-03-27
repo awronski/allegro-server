@@ -26,7 +26,6 @@ public class DealController {
         }
     }
 
-    @Cacheable("deals")
     @RequestMapping("/deals")
     @ResponseBody
     public List<Deal> deals(@RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {

@@ -35,7 +35,6 @@ public class PostBuyFormController {
         }
     }
 
-    @Cacheable("forms")
     @RequestMapping("/forms")
     @ResponseBody
     public List<PostBuyForm> postBuyForms(@RequestParam(value = "limit", required = false, defaultValue = "50") int limit) {

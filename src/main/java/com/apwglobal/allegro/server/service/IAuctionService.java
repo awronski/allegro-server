@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface IAuctionService {
 
-    List<Auction> getAllAuctions();
+    List<Auction> getAuctions(Optional<Integer> limit);
     Optional<Auction> getAuctionById(long itemId);
     void saveAuction(Auction auction);
     void updateAuction(Auction auction);

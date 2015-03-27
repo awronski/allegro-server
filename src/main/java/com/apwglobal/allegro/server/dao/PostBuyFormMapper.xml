@@ -38,21 +38,28 @@
         i.amount        AS item_amount
     </sql>
 
+    <sql id="postBuyFormFromJoins">
+        FROM postbuyforms p
+        INNER JOIN addresses r ON p.receiver_id = r.id
+        INNER JOIN addresses o ON p.orderer_id = o.id
+        INNER JOIN items i ON p.transactionid = i.transactionid
+    </sql>
+
+    <select id="getPostBuyFormById" parameterType="long" resultMap="postBuyFormMap">
+        SELECT <include refid="postBuyFormColumns"/>
+        <include refid="postBuyFormFromJoins"/>
+        WHERE p.transactionId = #{transactionId}
+    </select>
+
     <select id="getLastPostBuyForms" parameterType="int" resultMap="postBuyFormMap">
         SELECT <include refid="postBuyFormColumns"/>
-        FROM postbuyforms p
-            INNER JOIN addresses r ON p.receiver_id = r.id
-            INNER JOIN addresses o ON p.orderer_id = o.id
-            INNER JOIN items i ON p.transactionid = i.transactionid
+        <include refid="postBuyFormFromJoins"/>
         ORDER BY p.transactionid DESC
         LIMIT #{limit}
     </select>
     <select id="getPostBuyFormsBetween" parameterType="map" resultMap="postBuyFormMap">
         SELECT <include refid="postBuyFormColumns"/>
-        FROM postbuyforms p
-        INNER JOIN addresses r ON p.receiver_id = r.id
-        INNER JOIN addresses o ON p.orderer_id = o.id
-        INNER JOIN items i ON p.transactionid = i.transactionid
+        <include refid="postBuyFormFromJoins"/>
         <where>
             <if test="from.isPresent()">
                 "date" &gt;= #{from,jdbcType=TIMESTAMP}
@@ -62,6 +69,10 @@
             </if>
         </where>
         ORDER BY p.transactionid DESC
+    </select>
+
+    <select id="findPaymentProcessed" parameterType="long" resultType="com.apwglobal.nice.domain.PaymentProcessed">
+      SELECT * FROM payments_processed WHERE transactionid = #{transactionId}
     </select>
 
     <resultMap id="postBuyFormMap" type="com.apwglobal.nice.domain.PostBuyForm">
@@ -124,6 +135,10 @@
         INSERT INTO items
         (id, transactionid, title, price, quantity, amount)
         VALUES (#{id}, #{transactionId}, #{title}, #{price}, #{quantity}, #{amount})
+    </insert>
+    <insert id="savePaymentProcessed">
+        INSERT INTO payments_processed
+        (transactionid, date, ref) VALUES (#{transactionId}, #{date}, #{ref})
     </insert>
 
 </mapper>

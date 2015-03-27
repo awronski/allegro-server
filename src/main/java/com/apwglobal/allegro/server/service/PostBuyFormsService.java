@@ -1,6 +1,7 @@
 package com.apwglobal.allegro.server.service;
 
 import com.apwglobal.allegro.server.dao.PostBuyFormDao;
+import com.apwglobal.nice.domain.PaymentProcessed;
 import com.apwglobal.nice.domain.PostBuyForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +26,18 @@ public class PostBuyFormsService implements IPostBuyFormsService {
     public Optional<Long> findLastTransactionId() {
         return postBuyFormDao.findLastTransactionId();
     }
+
+    @Override
+    public List<PostBuyForm> getPostBuyFormsBetween(Optional<Date> from, Optional<Date> to) {
+        return postBuyFormDao.getPostBuyFormsBetween(from, to);
+    }
+
+    @Override
+    public List<PostBuyForm> getLastPostBuyForms(int limit) {
+        return postBuyFormDao.getLastPostBuyForms(limit);
+    }
+
+
 
     @Override
     public void savePostBuyForm(PostBuyForm f) {
@@ -46,4 +61,31 @@ public class PostBuyFormsService implements IPostBuyFormsService {
                 .forEach(postBuyFormDao::saveItem);
     }
 
+
+
+    @Override
+    public PaymentProcessed processed(long transactionId, double amount, String ref) {
+        PostBuyForm f = postBuyFormDao.getPostBuyFormById(transactionId);
+        check(f, transactionId, amount);
+
+        PaymentProcessed payment = postBuyFormDao.findPaymentProcessed(transactionId);
+        if (payment == null) {
+            payment = new PaymentProcessed.Builder()
+                    .transactionId(transactionId)
+                    .date(new Date())
+                    .ref(ref)
+                    .build();
+            postBuyFormDao.savePaymentProcessed(payment);
+            logger.debug("Saved: {}", payment);
+        }
+        return payment;
+    }
+
+    private void check(PostBuyForm f, long transactionId, double amount) {
+        //TODO add better exception handling
+        if (f == null || f.getTransactionId() != transactionId || f.getAmount() != amount) {
+            throw new IllegalArgumentException(
+                    String.format("PostBuyForm: %s, transactionId: %s, amount: %s", f, transactionId, amount));
+        }
+    }
 }

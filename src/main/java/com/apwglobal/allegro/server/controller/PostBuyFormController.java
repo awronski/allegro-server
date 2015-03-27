@@ -2,7 +2,9 @@ package com.apwglobal.allegro.server.controller;
 
 import com.apwglobal.allegro.server.controller.util.TestOptional;
 import com.apwglobal.allegro.server.dao.PostBuyFormDao;
+import com.apwglobal.allegro.server.service.IPostBuyFormsService;
 import com.apwglobal.nice.command.SearchPostBuyForm;
+import com.apwglobal.nice.domain.PaymentProcessed;
 import com.apwglobal.nice.domain.PostBuyForm;
 import junit.framework.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,7 @@ public class PostBuyFormController {
     public static final int SEARCH_LIMIT = 100;
 
     @Autowired
-    private PostBuyFormDao postBuyFormDao;
+    private IPostBuyFormsService postBuyFormsService;
 
     @ControllerAdvice
     static class JsonpAdvice extends AbstractJsonpResponseBodyAdvice {
@@ -38,13 +40,13 @@ public class PostBuyFormController {
     @RequestMapping("/forms")
     @ResponseBody
     public List<PostBuyForm> postBuyForms(@RequestParam(value = "limit", required = false, defaultValue = "50") int limit) {
-        return postBuyFormDao.getLastPostBuyForms(limit);
+        return postBuyFormsService.getLastPostBuyForms(limit);
     }
 
     @RequestMapping(value = "/forms/search", method = RequestMethod.POST)
     @ResponseBody
     public List<PostBuyForm> search(@RequestBody SearchPostBuyForm s) {
-        return postBuyFormDao.getPostBuyFormsBetween(s.getFrom(), s.getTo())
+        return postBuyFormsService.getPostBuyFormsBetween(s.getFrom(), s.getTo())
                 .stream()
                 .filter(f -> eq(s.getBuyerId(), f.getBuyerId()))
                 .filter(f -> eq(s.getEmail(), f.getEmail()))
@@ -55,5 +57,13 @@ public class PostBuyFormController {
                 .collect(toList());
     }
 
+    @RequestMapping(value = "/forms/processed", method = RequestMethod.PUT)
+    @ResponseBody
+    public PaymentProcessed processed(@RequestParam("transactionId") long transactionId,
+                                         @RequestParam("amount") double amount,
+                                         @RequestParam("ref") String ref) {
+
+        return postBuyFormsService.processed(transactionId, amount, ref);
+    }
 
 }

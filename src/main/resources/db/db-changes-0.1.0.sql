@@ -102,3 +102,11 @@ CREATE TABLE items (
   amount        DOUBLE PRECISION NOT NULL
 );
 ALTER TABLE items OWNER TO alle;
+
+DROP TABLE IF EXISTS payments_processed;
+CREATE TABLE payments_processed (
+  transactionId   BIGINT NOT NULL PRIMARY KEY REFERENCES postbuyforms(transactionId),
+  "date"          TIMESTAMP NOT NULL,
+  ref             VARCHAR(16) NOT NULL
+);
+ALTER TABLE payments_processed OWNER TO alle;

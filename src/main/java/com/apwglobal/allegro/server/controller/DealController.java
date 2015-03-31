@@ -14,17 +14,10 @@ import org.springframework.web.servlet.mvc.method.annotation.AbstractJsonpRespon
 import java.util.List;
 
 @Controller
-public class DealController {
+public class DealController implements JsonpControllerAdvice {
 
     @Autowired
     private IDealService dealService;
-
-    @ControllerAdvice
-    static class JsonpAdvice extends AbstractJsonpResponseBodyAdvice {
-        public JsonpAdvice() {
-            super("callback");
-        }
-    }
 
     @RequestMapping("/deals")
     @ResponseBody

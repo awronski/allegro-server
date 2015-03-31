@@ -5,28 +5,19 @@ import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.method.annotation.AbstractJsonpResponseBodyAdvice;
 
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
 @Controller
-public class FormFieldController {
+public class FormFieldController implements JsonpControllerAdvice {
 
     @Autowired
     private IAllegroNiceApi allegro;
-
-    @ControllerAdvice
-    static class JsonpAdvice extends AbstractJsonpResponseBodyAdvice {
-        public JsonpAdvice() {
-            super("callback");
-        }
-    }
 
     @Cacheable(value = "form-fields")
     @RequestMapping("/form-fields")

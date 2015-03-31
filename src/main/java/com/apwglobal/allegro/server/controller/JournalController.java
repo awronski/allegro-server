@@ -18,19 +18,12 @@ import static com.apwglobal.allegro.server.controller.util.TestOptional.*;
 import static java.util.stream.Collectors.*;
 
 @Controller
-public class JournalController {
+public class JournalController implements JsonpControllerAdvice {
 
     public static final int SEARCH_LIMIT = 100;
 
     @Autowired
     private IJournalService journalService;
-
-    @ControllerAdvice
-    static class JsonpAdvice extends AbstractJsonpResponseBodyAdvice {
-        public JsonpAdvice() {
-            super("callback");
-        }
-    }
 
     @RequestMapping("/journals")
     @ResponseBody

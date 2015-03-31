@@ -13,20 +13,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class AuctionController {
+public class AuctionController implements JsonpControllerAdvice {
 
     @Autowired
     private IAllegroNiceApi allegro;
 
     @Autowired
     private IAuctionService auctionService;
-
-    @ControllerAdvice
-    static class JsonpAdvice extends AbstractJsonpResponseBodyAdvice {
-        public JsonpAdvice() {
-            super("callback");
-        }
-    }
 
     @RequestMapping("/auctions")
     @ResponseBody

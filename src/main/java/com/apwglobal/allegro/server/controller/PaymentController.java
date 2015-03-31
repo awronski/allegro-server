@@ -36,6 +36,7 @@ public class PaymentController implements IPaymentController {
                 .filter(f -> eq(s.getEmail(), f.getEmail()))
                 .filter(f -> eq(s.getTransactionId(), f.getTransactionId()))
                 .filter(f -> eq(s.getWithInvoice(), f.getWithInvoice()))
+                .filter(f -> eq(s.getProcessed(), f.isProcessed()))
                 .filter(f -> exist(s.getWithMsg(), f.getMsg()))
                 .limit(s.getLimit().orElse(SEARCH_LIMIT))
                 .collect(toList());

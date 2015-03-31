@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.apwglobal.allegro.server.dao.PostBuyFormDao">
+<mapper namespace="com.apwglobal.allegro.server.dao.PaymentDao">
 
     <select id="findLastTransactionId" resultType="java.util.Optional">
         SELECT max(transactionid)
-        FROM postbuyforms
+        FROM payments
     </select>
 
-    <sql id="postBuyFormColumns">
+    <sql id="paymentColumns">
         p.*,
 
         r.id            AS r_id,
@@ -38,28 +38,28 @@
         i.amount        AS item_amount
     </sql>
 
-    <sql id="postBuyFormFromJoins">
-        FROM postbuyforms p
+    <sql id="paymentFromJoins">
+        FROM payments p
         INNER JOIN addresses r ON p.receiver_id = r.id
         INNER JOIN addresses o ON p.orderer_id = o.id
         INNER JOIN items i ON p.transactionid = i.transactionid
     </sql>
 
-    <select id="getPostBuyFormById" parameterType="long" resultMap="postBuyFormMap">
-        SELECT <include refid="postBuyFormColumns"/>
-        <include refid="postBuyFormFromJoins"/>
+    <select id="getPaymentById" parameterType="long" resultMap="paymentsMap">
+        SELECT <include refid="paymentColumns"/>
+        <include refid="paymentFromJoins"/>
         WHERE p.transactionId = #{transactionId}
     </select>
 
-    <select id="getLastPostBuyForms" parameterType="int" resultMap="postBuyFormMap">
-        SELECT <include refid="postBuyFormColumns"/>
-        <include refid="postBuyFormFromJoins"/>
+    <select id="getLastPayments" parameterType="int" resultMap="paymentsMap">
+        SELECT <include refid="paymentColumns"/>
+        <include refid="paymentFromJoins"/>
         ORDER BY p.transactionid DESC
         LIMIT #{limit}
     </select>
-    <select id="getPostBuyFormsBetween" parameterType="map" resultMap="postBuyFormMap">
-        SELECT <include refid="postBuyFormColumns"/>
-        <include refid="postBuyFormFromJoins"/>
+    <select id="getPaymentsBetween" parameterType="map" resultMap="paymentsMap">
+        SELECT <include refid="paymentColumns"/>
+        <include refid="paymentFromJoins"/>
         <where>
             <if test="from.isPresent()">
                 "date" &gt;= #{from,jdbcType=TIMESTAMP}
@@ -71,9 +71,9 @@
         ORDER BY p.transactionid DESC
     </select>
 
-    <select id="getUnprocessed" resultMap="postBuyFormMap">
-        SELECT <include refid="postBuyFormColumns"/>
-        <include refid="postBuyFormFromJoins"/>
+    <select id="getUnprocessed" resultMap="paymentsMap">
+        SELECT <include refid="paymentColumns"/>
+        <include refid="paymentFromJoins"/>
         LEFT JOIN payments_processed pp ON p.transactionid = pp.transactionid
         WHERE pp.transactionid IS NULL
         ORDER BY p.transactionid DESC
@@ -83,7 +83,7 @@
       SELECT * FROM payments_processed WHERE transactionid = #{transactionId}
     </select>
 
-    <resultMap id="postBuyFormMap" type="com.apwglobal.nice.domain.PostBuyForm">
+    <resultMap id="paymentsMap" type="com.apwglobal.nice.domain.Payment">
         <id property="transactionId" column="transactionId"/>
         <result property="buyerId" column="buyerId"/>
         <result property="email" column="email"/>
@@ -96,6 +96,7 @@
         <result property="payId" column="payId"/>
         <result property="payStatus" column="payStatus"/>
         <result property="shipment" column="shipment"/>
+        <result property="processed" column="processed"/>
         <association property="receiver" column="receiver_id" foreignColumn="id" fetchType="eager"
                      resultMap="addressMap" columnPrefix="r_"/>
         <association property="orderer" column="orderer_id" foreignColumn="id" fetchType="eager"
@@ -105,7 +106,7 @@
     </resultMap>
     <resultMap id="itemsMap" type="com.apwglobal.nice.domain.Item">
         <id property="id" column="id"/>
-        <result property="transactionId" column="transactionId"/>
+        <id property="transactionId" column="transactionId"/>
         <result property="title" column="title"/>
         <result property="price" column="price"/>
         <result property="quantity" column="quantity"/>
@@ -132,12 +133,12 @@
         VALUES (#{id}, #{country}, #{street}, #{code}, #{city}, #{fullname}, #{company,jdbcType=VARCHAR}, #{phone},
         #{nip,jdbcType=VARCHAR})
     </insert>
-    <insert id="savePostBuyForm" keyProperty="transactionId" keyColumn="transactionId">
-        INSERT INTO postbuyforms
+    <insert id="savePayment"  keyProperty="transactionId" keyColumn="transactionId">
+        INSERT INTO payments
         (transactionid, buyerid, email, "date", amount, postageamount, paymentamount, withinvoice,
-         msg, payid, paystatus, shipment, orderer_id, receiver_id)
+         msg, payid, paystatus, shipment, processed, orderer_id, receiver_id)
         VALUES (#{transactionId}, #{buyerId}, #{email}, #{date}, #{amount}, #{postageAmount}, #{paymentAmount}, #{withInvoice},
-                #{msg,jdbcType=VARCHAR}, #{payId}, #{payStatus}, #{shipment}, #{orderer.id}, #{receiver.id})
+                #{msg,jdbcType=VARCHAR}, #{payId}, #{payStatus}, #{shipment}, #{processed}, #{orderer.id}, #{receiver.id})
     </insert>
     <insert id="saveItem">
         INSERT INTO items

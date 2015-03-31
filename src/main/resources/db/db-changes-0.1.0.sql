@@ -73,8 +73,8 @@ CREATE TABLE addresses (
 );
 ALTER TABLE addresses OWNER TO alle;
 
-DROP TABLE IF EXISTS postbuyforms;
-CREATE TABLE postbuyforms (
+DROP TABLE IF EXISTS payments;
+CREATE TABLE payments (
   transactionId BIGINT NOT NULL PRIMARY KEY,
   buyerId       BIGINT NOT NULL,
   email         VARCHAR(128) NOT NULL,
@@ -87,25 +87,27 @@ CREATE TABLE postbuyforms (
   payId         BIGINT NOT NULL,
   payStatus     VARCHAR(32) NOT NULL,
   shipment      VARCHAR(96) NOT NULL,
+  processed     BOOL NOT NULL,
   orderer_id    BIGINT REFERENCES addresses(id),
   receiver_id   BIGINT REFERENCES addresses(id) NOT NULL
 );
-ALTER TABLE postbuyforms OWNER TO alle;
+ALTER TABLE payments OWNER TO alle;
 
 DROP TABLE IF EXISTS items;
 CREATE TABLE items (
-  id            BIGINT NOT NULL PRIMARY KEY,
-  transactionId BIGINT NOT NULL,
+  id            BIGINT NOT NULL,
+  transactionId BIGINT NOT NULL REFERENCES payments(transactionId),
   title         VARCHAR(64) NOT NULL,
   price         DOUBLE PRECISION NOT NULL,
   quantity      INTEGER NOT NULL,
-  amount        DOUBLE PRECISION NOT NULL
+  amount        DOUBLE PRECISION NOT NULL,
+  PRIMARY KEY (id, transactionId)
 );
 ALTER TABLE items OWNER TO alle;
 
 DROP TABLE IF EXISTS payments_processed;
 CREATE TABLE payments_processed (
-  transactionId   BIGINT NOT NULL PRIMARY KEY REFERENCES postbuyforms(transactionId),
+  transactionId   BIGINT NOT NULL PRIMARY KEY REFERENCES payments(transactionId),
   "date"          TIMESTAMP NOT NULL,
   ref             VARCHAR(16) NOT NULL
 );

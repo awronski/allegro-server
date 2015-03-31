@@ -1,7 +1,7 @@
 package com.apwglobal.allegro.server.scheduler;
 
 import com.apwglobal.allegro.server.service.IDealService;
-import com.apwglobal.allegro.server.service.IPostBuyFormsService;
+import com.apwglobal.allegro.server.service.IPaymentService;
 import com.apwglobal.nice.domain.Deal;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,30 +14,30 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PostBuyFormsScheduler {
+public class PaymentScheduler {
 
     @Autowired
     private IAllegroNiceApi allegro;
 
     @Autowired
-    private IPostBuyFormsService postBuyFormsService;
+    private IPaymentService paymentService;
 
     @Autowired
     private IDealService dealService;
 
     @Scheduled(fixedDelay = 2 * 60000)
     @Transactional
-    public void syncPostBuyForms() {
+    public void syncPayments() {
 
-        Optional<Long> transactionId = postBuyFormsService.findLastTransactionId();
+        Optional<Long> transactionId = paymentService.findLastTransactionId();
         List<Deal> deals = transactionId
                 .map(dealService::getDealsAfter)
                 .orElse(dealService.getDealsAfter(0));
 
         allegro
                 .login()
-                .getPostBuyForms(Observable.from(deals))
-                .forEach(postBuyFormsService::savePostBuyForm);
+                .getPayments(Observable.from(deals))
+                .forEach(paymentService::savePayment);
     }
 
 }

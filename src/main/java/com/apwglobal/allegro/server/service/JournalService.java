@@ -1,9 +1,7 @@
 package com.apwglobal.allegro.server.service;
 
 import com.apwglobal.allegro.server.dao.JournalDao;
-import com.apwglobal.allegro.server.dao.PostBuyFormDao;
 import com.apwglobal.nice.domain.Journal;
-import com.apwglobal.nice.domain.PostBuyForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

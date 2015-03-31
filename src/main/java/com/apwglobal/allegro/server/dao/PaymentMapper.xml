@@ -74,10 +74,13 @@
     <select id="getUnprocessed" resultMap="paymentsMap">
         SELECT <include refid="paymentColumns"/>
         <include refid="paymentFromJoins"/>
-        LEFT JOIN payments_processed pp ON p.transactionid = pp.transactionid
-        WHERE pp.transactionid IS NULL
+        WHERE p.processed = false
         ORDER BY p.transactionid DESC
     </select>
+
+    <update id="updatePaymentAsProcessed" parameterType="long">
+        UPDATE payments set processed = true WHERE transactionId = #{transactionId}
+    </update>
 
     <select id="findPaymentProcessed" parameterType="long" resultType="com.apwglobal.nice.domain.PaymentProcessed">
       SELECT * FROM payments_processed WHERE transactionid = #{transactionId}

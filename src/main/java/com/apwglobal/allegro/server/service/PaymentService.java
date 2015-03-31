@@ -66,20 +66,21 @@ public class PaymentService implements IPaymentService {
 
     @Override
     public PaymentProcessed processed(long transactionId, double amount, String ref) {
-        Payment f = paymentDao.getPaymentById(transactionId);
-        check(f, transactionId, amount);
+        Payment payment = paymentDao.getPaymentById(transactionId);
+        check(payment, transactionId, amount);
 
-        PaymentProcessed payment = paymentDao.findPaymentProcessed(transactionId);
-        if (payment == null) {
-            payment = new PaymentProcessed.Builder()
+        PaymentProcessed processed = paymentDao.findPaymentProcessed(transactionId);
+        if (processed == null) {
+            processed = new PaymentProcessed.Builder()
                     .transactionId(transactionId)
                     .date(new Date())
                     .ref(ref)
                     .build();
-            paymentDao.savePaymentProcessed(payment);
-            logger.debug("Saved: {}", payment);
+            paymentDao.savePaymentProcessed(processed);
+            paymentDao.updatePaymentAsProcessed(payment.getTransactionId());
+            logger.debug("Saved: {}", processed);
         }
-        return payment;
+        return processed;
     }
 
     private void check(Payment p, long transactionId, double amount) {

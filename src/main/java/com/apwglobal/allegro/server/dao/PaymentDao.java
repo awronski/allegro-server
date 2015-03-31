@@ -21,6 +21,8 @@ public interface PaymentDao {
     void savePayment(Payment form);
     void saveItem(Item item);
 
+    void updatePaymentAsProcessed(long transactionId);
+
     PaymentProcessed findPaymentProcessed(long transactionId);
     void savePaymentProcessed(PaymentProcessed payment);
     List<Payment> getUnprocessed();

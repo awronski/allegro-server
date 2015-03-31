@@ -23,5 +23,6 @@ public interface PostBuyFormDao {
 
     PaymentProcessed findPaymentProcessed(long transactionId);
     void savePaymentProcessed(PaymentProcessed payment);
+    List<PostBuyForm> getUnprocessed();
 
 }

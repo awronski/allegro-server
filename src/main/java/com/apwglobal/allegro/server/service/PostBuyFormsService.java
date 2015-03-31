@@ -88,4 +88,9 @@ public class PostBuyFormsService implements IPostBuyFormsService {
                     String.format("PostBuyForm: %s, transactionId: %s, amount: %s", f, transactionId, amount));
         }
     }
+
+    @Override
+    public List<PostBuyForm> getUnprocessed() {
+        return postBuyFormDao.getUnprocessed();
+    }
 }

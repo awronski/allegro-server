@@ -71,6 +71,14 @@
         ORDER BY p.transactionid DESC
     </select>
 
+    <select id="getUnprocessed" resultMap="postBuyFormMap">
+        SELECT <include refid="postBuyFormColumns"/>
+        <include refid="postBuyFormFromJoins"/>
+        LEFT JOIN payments_processed pp ON p.transactionid = pp.transactionid
+        WHERE pp.transactionid IS NULL
+        ORDER BY p.transactionid DESC
+    </select>
+
     <select id="findPaymentProcessed" parameterType="long" resultType="com.apwglobal.nice.domain.PaymentProcessed">
       SELECT * FROM payments_processed WHERE transactionid = #{transactionId}
     </select>

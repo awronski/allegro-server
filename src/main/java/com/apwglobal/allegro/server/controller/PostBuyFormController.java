@@ -6,6 +6,7 @@ import com.apwglobal.allegro.server.service.IPostBuyFormsService;
 import com.apwglobal.nice.command.SearchPostBuyForm;
 import com.apwglobal.nice.domain.PaymentProcessed;
 import com.apwglobal.nice.domain.PostBuyForm;
+import com.apwglobal.nice.holder.PostBuyFormWithProcessedStatus;
 import junit.framework.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,28 +24,19 @@ import static com.apwglobal.allegro.server.controller.util.TestOptional.le;
 import static java.util.stream.Collectors.toList;
 
 @Controller
-public class PostBuyFormController {
+public class PostBuyFormController implements IPostBuyFormController {
 
     public static final int SEARCH_LIMIT = 100;
 
     @Autowired
     private IPostBuyFormsService postBuyFormsService;
 
-    @ControllerAdvice
-    static class JsonpAdvice extends AbstractJsonpResponseBodyAdvice {
-        public JsonpAdvice() {
-            super("callback");
-        }
-    }
-
-    @RequestMapping("/forms")
-    @ResponseBody
+    @Override
     public List<PostBuyForm> postBuyForms(@RequestParam(value = "limit", required = false, defaultValue = "50") int limit) {
         return postBuyFormsService.getLastPostBuyForms(limit);
     }
 
-    @RequestMapping(value = "/forms/search", method = RequestMethod.POST)
-    @ResponseBody
+    @Override
     public List<PostBuyForm> search(@RequestBody SearchPostBuyForm s) {
         return postBuyFormsService.getPostBuyFormsBetween(s.getFrom(), s.getTo())
                 .stream()
@@ -57,13 +49,17 @@ public class PostBuyFormController {
                 .collect(toList());
     }
 
-    @RequestMapping(value = "/forms/processed", method = RequestMethod.PUT)
-    @ResponseBody
-    public PaymentProcessed processed(@RequestParam("transactionId") long transactionId,
-                                         @RequestParam("amount") double amount,
-                                         @RequestParam("ref") String ref) {
+    @Override
+    public PaymentProcessed process(@RequestParam("transactionId") long transactionId,
+                                    @RequestParam("amount") double amount,
+                                    @RequestParam("ref") String ref) {
 
         return postBuyFormsService.processed(transactionId, amount, ref);
+    }
+
+    @Override
+    public List<PostBuyForm> unprocessed() {
+        return postBuyFormsService.getUnprocessed();
     }
 
 }

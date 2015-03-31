@@ -16,8 +16,7 @@ public interface IPostBuyFormsService {
 
     void savePostBuyForm(PostBuyForm f);
 
+    List<PostBuyForm> getUnprocessed();
     PaymentProcessed processed(long transactionId, double amount, String ref);
-
-
 
 }

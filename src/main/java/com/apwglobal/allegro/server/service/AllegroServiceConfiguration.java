@@ -1,38 +1,34 @@
 package com.apwglobal.allegro.server.service;
 
+import com.apwglobal.allegro.server.conf.AllegroProperties;
 import com.apwglobal.nice.login.Credentials;
 import com.apwglobal.nice.service.AllegroNiceApi;
 import com.apwglobal.nice.service.IAllegroNiceApi;
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AllegroServiceConfiguration {
 
-    @Value("${allegro.username}")
-    private String username;
+    private final static Logger logger = LoggerFactory.getLogger(AllegroServiceConfiguration.class);
 
-    @Value("${allegro.password}")
-    private String password;
-
-    @Value("${allegro.country}")
-    private int country;
-
-    @Value("${allegro.key}")
-    private String key;
-
-    @Value("${allegro.sandbox}")
-    private Boolean test;
+    @Autowired
+    private AllegroProperties prop;
 
     @Bean
     public IAllegroNiceApi allegro() {
-        com.apwglobal.nice.service.Configuration conf = new com.apwglobal.nice.service.Configuration(country);
-        Credentials cred = new Credentials(username, password, key);
+
+        logger.debug("Creating AllegroService, sandbox = {}", prop.isSandbox());
+
+        com.apwglobal.nice.service.Configuration conf = new com.apwglobal.nice.service.Configuration(prop.getCountry());
+        Credentials cred = new Credentials(prop.getUsername(), prop.getPassword(), prop.getKey());
         return new AllegroNiceApi.Builder()
                 .conf(conf)
                 .cred(cred)
-                .test(test)
+                .test(prop.isSandbox())
                 .build();
     }
 

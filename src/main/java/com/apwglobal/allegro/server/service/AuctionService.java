@@ -100,6 +100,8 @@ public class AuctionService implements IAuctionService {
         return auctionDao.getAuctionStatusById(itemId);
     }
 
+
+    //TODO should return Auctions, not auction status
     @Override
     public List<AuctionStatus> getAuctionStatusesByStatus(AuctionStatusType status) {
         return auctionDao.getAuctionStatusesByStatus(status);

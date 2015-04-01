@@ -23,8 +23,10 @@ public class AuctionController implements JsonpControllerAdvice {
 
     @RequestMapping("/auctions")
     @ResponseBody
-    public List<Auction> auctions(@RequestParam(value = "limit", required = false) Optional<Integer> limit) {
-        return auctionService.getAuctions(limit);
+    public List<Auction> auctions(
+            @RequestParam(value = "open", required = false) Optional<Boolean> open,
+            @RequestParam(value = "limit", required = false) Optional<Integer> limit) {
+        return auctionService.getAuctions(open, limit);
     }
 
     @RequestMapping("/auctions/{itemId}")
@@ -49,18 +51,6 @@ public class AuctionController implements JsonpControllerAdvice {
     @ResponseBody
     public CreatedAuction create(@RequestBody List<NewAuctionField> fields) {
         return auctionService.createNewAuction(fields);
-    }
-
-    @RequestMapping("/auctions/check-status")
-    @ResponseBody
-    public AuctionStatus checkStatus(@RequestParam("itemId") long itemId) {
-        return auctionService.getAuctionStatusById(itemId);
-    }
-
-    @RequestMapping("/auctions/by-status")
-    @ResponseBody
-    public List<AuctionStatus> byStatus(@RequestParam("status") AuctionStatusType status) {
-        return auctionService.getAuctionStatusesByStatus(status);
     }
 
 }

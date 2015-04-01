@@ -4,6 +4,11 @@
     <select id="getAuctions" parameterType="map" resultType="com.apwglobal.nice.domain.Auction">
         SELECT *
         FROM auctions
+        <where>
+            <if test="open.isPresent()">
+                open = #{open,jdbcType=BOOLEAN}
+            </if>
+        </where>
         ORDER BY id DESC
         <if test="limit.isPresent()">
             limit #{limit,jdbcType=INTEGER}
@@ -14,22 +19,15 @@
         SELECT * FROM auctions WHERE id = #{id}
     </select>
 
-    <select id="getAuctionStatusById" parameterType="long" resultType="com.apwglobal.nice.domain.AuctionStatus">
-        SELECT * FROM auctions_statuses WHERE itemId = #{itemId}
-    </select>
-    <select id="getAuctionStatusesByStatus" resultType="com.apwglobal.nice.domain.AuctionStatus">
-        SELECT * FROM auctions_statuses WHERE status = #{status}
-    </select>
-
     <insert id="saveAuction" parameterType="com.apwglobal.nice.domain.Auction" keyProperty="Id">
         INSERT INTO auctions
-        (id, title, thumbnailUrl, startQuantity,
-         soldQuantity, quantityType, startTime, endTime, biddersCounter, categoryId,
-         watchersCounter, viewsCounter, note, special, shop, payu, price, priceType)
+        (id, title, thumbnailUrl, startQuantity, soldQuantity, quantityType, startTime,
+         endTime, biddersCounter, categoryId, watchersCounter, viewsCounter,
+         note, special, shop, payu, price, priceType, "open")
         VALUES (
-            #{id}, #{title}, #{thumbnailUrl}, #{startQuantity}, #{soldQuantity},
-            #{quantityType}, #{startTime}, #{endTime,jdbcType=TIMESTAMP}, #{biddersCounter}, #{categoryId},
-            #{watchersCounter}, #{viewsCounter}, #{note}, #{special}, #{shop}, #{payu}, #{price}, #{priceType}
+            #{id}, #{title}, #{thumbnailUrl}, #{startQuantity}, #{soldQuantity}, #{quantityType}, #{startTime},
+            #{endTime,jdbcType=TIMESTAMP}, #{biddersCounter}, #{categoryId}, #{watchersCounter}, #{viewsCounter},
+            #{note}, #{special}, #{shop}, #{payu}, #{price}, #{priceType}, #{open}
         )
     </insert>
 
@@ -42,18 +40,8 @@
         WHERE id = #{id}
     </update>
 
-
-
-    <insert id="saveAuctionStatus" parameterType="com.apwglobal.nice.domain.AuctionStatus" keyProperty="itemId">
-        INSERT INTO auctions_statuses
-        (itemId, ref, status)
-        VALUES (#{itemId}, #{ref}, #{status})
-    </insert>
-
-    <update id="closeAuctionStatus" parameterType="com.apwglobal.nice.domain.AuctionStatus">
-        UPDATE auctions_statuses SET
-            status = 'CLOSE'
-        WHERE itemId = #{itemId}
+    <update id="closeAuction" parameterType="com.apwglobal.nice.domain.Auction">
+        UPDATE auctions SET open = false WHERE id = #{itemId}
     </update>
 
 </mapper>

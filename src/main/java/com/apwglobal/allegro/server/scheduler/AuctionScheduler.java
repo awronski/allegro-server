@@ -2,8 +2,6 @@ package com.apwglobal.allegro.server.scheduler;
 
 import com.apwglobal.allegro.server.service.IAuctionService;
 import com.apwglobal.nice.domain.Auction;
-import com.apwglobal.nice.domain.AuctionStatus;
-import com.apwglobal.nice.domain.AuctionStatusType;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,8 +11,8 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 
 import java.util.List;
+import java.util.Optional;
 
-import static com.apwglobal.nice.domain.AuctionStatusType.*;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -59,9 +57,9 @@ public class AuctionScheduler {
     @Scheduled(fixedDelay=13 * 60000)
     @Transactional
     public void closeAuctions() {
-        List<Long> inDb  = auctionService.getAuctionStatusesByStatus(OPEN)
+        List<Long> inDb  = auctionService.getAuctions(Optional.of(true), Optional.empty())
                 .stream()
-                .map(AuctionStatus::getItemId)
+                .map(Auction::getId)
                 .collect(toList());
 
         if (inDb.isEmpty()) {

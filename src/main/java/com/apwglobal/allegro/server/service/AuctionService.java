@@ -14,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.apwglobal.nice.domain.AuctionStatusType.*;
-
 @Service
 @Transactional
 public class AuctionService implements IAuctionService {
@@ -30,8 +28,8 @@ public class AuctionService implements IAuctionService {
 
 
     @Override
-    public List<Auction> getAuctions(Optional<Integer> limit) {
-        return auctionDao.getAuctions(limit);
+    public List<Auction> getAuctions(Optional<Boolean> open, Optional<Integer> limit) {
+        return auctionDao.getAuctions(open, limit);
     }
 
     @Override
@@ -41,13 +39,7 @@ public class AuctionService implements IAuctionService {
 
     @Override
     public void saveAuction(Auction auction) {
-        AuctionStatus status = new AuctionStatus.Builder()
-                .itemId(auction.getId())
-                .status(OPEN)
-                .ref("?")
-                .build();
         auctionDao.saveAuction(auction);
-        auctionDao.saveAuctionStatus(status);
 
         logger.debug("Saved: {}", auction);
     }
@@ -87,29 +79,12 @@ public class AuctionService implements IAuctionService {
         CreatedAuction newAuction = allegro.createNewAuction(fields);
         logger.debug("Created: {}", newAuction);
 
-        //TODO update auction in db
-
         return newAuction;
-    }
-
-
-
-
-    @Override
-    public AuctionStatus getAuctionStatusById(long itemId) {
-        return auctionDao.getAuctionStatusById(itemId);
-    }
-
-
-    //TODO should return Auctions, not auction status
-    @Override
-    public List<AuctionStatus> getAuctionStatusesByStatus(AuctionStatusType status) {
-        return auctionDao.getAuctionStatusesByStatus(status);
     }
 
     @Override
     public void closeAuction(long itemId) {
-        auctionDao.closeAuctionStatus(itemId);
+        auctionDao.closeAuction(itemId);
         logger.debug("Finished: {}", itemId);
     }
 

@@ -18,7 +18,7 @@ public class DealScheduler {
     @Autowired
     private IDealService dealService;
 
-    @Scheduled(fixedDelay=2 * 60000)
+    @Scheduled(fixedDelay=7 * 60000)
     @Transactional
     public void syncDeals() {
         Optional<Long> lastEventId = dealService.findLastRowId();

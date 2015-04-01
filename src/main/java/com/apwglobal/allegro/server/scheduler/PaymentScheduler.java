@@ -25,7 +25,7 @@ public class PaymentScheduler {
     @Autowired
     private IDealService dealService;
 
-    @Scheduled(fixedDelay = 2 * 60000)
+    @Scheduled(fixedDelay = 15 * 60000)
     @Transactional
     public void syncPayments() {
 

@@ -26,7 +26,7 @@ public class AuctionScheduler {
     @Autowired
     private IAuctionService auctionService;
 
-    @Scheduled(fixedDelay=9 * 60000)
+    @Scheduled(fixedDelay=11 * 60000)
     @Transactional
     public void syncAuctions() {
         doAuctions(
@@ -34,7 +34,7 @@ public class AuctionScheduler {
                 auctionService::saveAuction);
     }
 
-    @Scheduled(fixedDelay=11 * 60000)
+    @Scheduled(fixedDelay=9 * 60000)
     @Transactional
     public void updateAuctions() {
         doAuctions(
@@ -56,7 +56,7 @@ public class AuctionScheduler {
 
 
 
-    @Scheduled(fixedDelay=1 * 60000)
+    @Scheduled(fixedDelay=13 * 60000)
     @Transactional
     public void closeAuctions() {
         List<Long> inDb  = auctionService.getAuctionStatusesByStatus(OPEN)

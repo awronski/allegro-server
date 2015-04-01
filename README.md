@@ -1,6 +1,9 @@
 # allegro-server
 This is alternative allegro server that synchronize with the original one and share the data via the rests controllers.
-Because it stores the data locally it is fast and reliable.
+Because it stores the data locally in the datebase it is fast and reliable.
+
+You can access the data with any rest client or use our [allegro-client](https://github.com/awronski/allegro-client)
+java library
 
 # What does it do?
 It synchronize data with allegro including:
@@ -29,6 +32,7 @@ It give rest api for:
 ## Requirements
 - Java 8
 - Postgres 9
+- [allegro-nice-api](https://github.com/awronski/allegro-nice-api) library
 
 ## Installation
 
@@ -50,7 +54,7 @@ Rename file ```application.template``` to ```application.properties``` and chang
 
 ### Start server
 ```
-mvn package && java -jar target/allegro-server-0.1.0.jar
+mvn package && java -jar target/allegro-server.jar
 ```
 
 ### _... work in progress_

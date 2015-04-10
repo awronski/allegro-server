@@ -66,6 +66,7 @@ public class AuctionScheduler {
             return;
         }
 
+        //TODO what to do if auction is open but allegro did not refreshed list yet?
         List<Long> inAllegro = allegro
                 .login()
                 .getAuctions()

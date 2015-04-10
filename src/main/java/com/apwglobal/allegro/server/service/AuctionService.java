@@ -82,6 +82,8 @@ public class AuctionService implements IAuctionService {
         return newAuction;
     }
 
+    //TODO reopen auction if there was error at allegro
+
     @Override
     public void closeAuction(long itemId) {
         auctionDao.closeAuction(itemId);

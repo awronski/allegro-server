@@ -33,6 +33,7 @@
 
     <update id="updateAuction" parameterType="com.apwglobal.nice.domain.Auction">
       UPDATE auctions SET
+          startQuantity = #{startQuantity},
           soldQuantity = #{soldQuantity},
               biddersCounter = #{biddersCounter},
               watchersCounter = #{watchersCounter},

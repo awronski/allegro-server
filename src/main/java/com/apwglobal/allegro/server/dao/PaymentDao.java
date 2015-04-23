@@ -27,4 +27,6 @@ public interface PaymentDao {
     void savePaymentProcessed(PaymentProcessed payment);
     List<Payment> getUnprocessed();
 
+    boolean wasItemPaid(@Param("from") Date from, @Param("itemId") long itemId, @Param("userId") int userId);
+
 }

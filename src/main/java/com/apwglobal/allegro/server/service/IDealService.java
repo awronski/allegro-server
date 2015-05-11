@@ -9,7 +9,9 @@ public interface IDealService {
 
     Optional<Long> findLastRowId();
     List<Deal> getLastDeals(int limit);
-    List<Deal> getDealsAfter(long transactionId);
+    List<Deal> getDealsAfterTransactionId(long transactionId);
+    List<Deal> getDealsAfterEventId(long eventId);
+
     void saveDeal(Deal deal);
 
 }

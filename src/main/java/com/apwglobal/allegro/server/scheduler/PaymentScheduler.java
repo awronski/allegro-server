@@ -31,8 +31,8 @@ public class PaymentScheduler {
 
         Optional<Long> transactionId = paymentService.findLastTransactionId();
         List<Deal> deals = transactionId
-                .map(dealService::getDealsAfter)
-                .orElse(dealService.getDealsAfter(0));
+                .map(dealService::getDealsAfterTransactionId)
+                .orElse(dealService.getDealsAfterTransactionId(0));
 
         allegro
                 .login()

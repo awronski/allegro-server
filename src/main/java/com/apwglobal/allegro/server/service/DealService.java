@@ -31,8 +31,13 @@ public class DealService implements IDealService {
     }
 
     @Override
-    public List<Deal> getDealsAfter(long transactionId) {
-        return dealDao.getDealsAfter(transactionId);
+    public List<Deal> getDealsAfterTransactionId(long transactionId) {
+        return dealDao.getDealsAfterTransactionId(transactionId);
+    }
+
+    @Override
+    public List<Deal> getDealsAfterEventId(long eventId) {
+        return dealDao.getDealsAfterEventId(eventId);
     }
 
     @Override

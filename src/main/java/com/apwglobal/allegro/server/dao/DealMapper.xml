@@ -14,12 +14,19 @@
         LIMIT #{limit}
     </select>
 
-    <select id="getDealsAfter" parameterType="long" resultType="com.apwglobal.nice.domain.Deal">
+    <select id="getDealsAfterTransactionId" parameterType="long" resultType="com.apwglobal.nice.domain.Deal">
         SELECT *
         FROM deals
         WHERE transactionId IS NOT NULL
               AND transactionid > #{transactionId}
         ORDER BY transactionid ASC
+    </select>
+
+    <select id="getDealsAfterEventId" parameterType="long" resultType="com.apwglobal.nice.domain.Deal">
+        SELECT *
+        FROM deals
+        WHERE eventId > #{eventId}
+        ORDER BY eventId ASC
     </select>
 
     <insert id="saveDeal">

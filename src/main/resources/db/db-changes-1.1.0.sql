@@ -12,4 +12,5 @@ ALTER TABLE addresses ALTER phone DROP NOT NULL ;
 CREATE TABLE last_processed_deal (
   eventid BIGINT PRIMARY KEY
 );
+INSERT INTO last_processed_deal select 0;
 ALTER TABLE last_processed_deal OWNER TO alle;

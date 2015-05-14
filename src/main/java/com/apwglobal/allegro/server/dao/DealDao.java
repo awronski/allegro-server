@@ -7,11 +7,12 @@ import java.util.Optional;
 
 public interface DealDao {
 
+    Optional<Long> findLastProcessedDealEventId();
     Optional<Long> findLastRowId();
     List<Deal> getLastDeals(int limit);
-    List<Deal> getDealsAfterTransactionId(long transactionId);
     List<Deal> getDealsAfterEventId(long eventId);
 
     void saveDeal(Deal deal);
+    void updateLastProcessedDealEventId(Deal deal);
 
 }

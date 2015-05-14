@@ -2,6 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.apwglobal.allegro.server.dao.DealDao">
 
+    <select id="findLastProcessedDealEventId" resultType="java.util.Optional">
+        select eventid from last_processed_deal
+    </select>
+
     <select id="findLastRowId" resultType="java.util.Optional">
         SELECT max(eventid)
         FROM deals
@@ -12,14 +16,6 @@
         FROM deals
         ORDER BY eventid DESC
         LIMIT #{limit}
-    </select>
-
-    <select id="getDealsAfterTransactionId" parameterType="long" resultType="com.apwglobal.nice.domain.Deal">
-        SELECT *
-        FROM deals
-        WHERE transactionId IS NOT NULL
-              AND transactionid > #{transactionId}
-        ORDER BY transactionid ASC
     </select>
 
     <select id="getDealsAfterEventId" parameterType="long" resultType="com.apwglobal.nice.domain.Deal">
@@ -36,5 +32,9 @@
             (#{eventId}, #{dealType}, #{eventTime}, #{dealId}, #{transactionId, jdbcType=BIGINT}, #{sellerId}, #{itemId}, #{buyerId},
              #{quantity})
     </insert>
+
+    <update id="updateLastProcessedDealEventId" parameterType="com.apwglobal.nice.domain.Deal">
+        UPDATE last_processed_deal SET eventid = #{eventId}
+    </update>
 
 </mapper>

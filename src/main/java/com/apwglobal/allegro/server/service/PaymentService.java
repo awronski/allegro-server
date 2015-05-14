@@ -23,11 +23,6 @@ public class PaymentService implements IPaymentService {
     private PaymentDao paymentDao;
 
     @Override
-    public Optional<Long> findLastTransactionId() {
-        return paymentDao.findLastTransactionId();
-    }
-
-    @Override
     public List<Payment> getPaymentsBetween(Optional<Date> from, Optional<Date> to) {
         return paymentDao.getPaymentsBetween(from, to);
     }

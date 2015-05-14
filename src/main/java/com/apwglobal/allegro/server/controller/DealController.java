@@ -23,12 +23,6 @@ public class DealController implements JsonpControllerAdvice {
         return dealService.getLastDeals(limit);
     }
 
-    @RequestMapping("/deals/after/transactionId/{transactionId}")
-    @ResponseBody
-    public List<Deal> dealsAfterTransactionId(@PathVariable(value = "transactionId") long transactionId) {
-        return dealService.getDealsAfterTransactionId(transactionId);
-    }
-
     @RequestMapping("/deals/after/eventId/{eventId}")
     @ResponseBody
     public List<Deal> dealsAfterEventId(@PathVariable(value = "eventId") long eventId) {

@@ -21,6 +21,11 @@ public class DealService implements IDealService {
     private DealDao dealDao;
 
     @Override
+    public Optional<Long> findLastProcessedDealEventId() {
+        return dealDao.findLastProcessedDealEventId();
+    }
+
+    @Override
     public Optional<Long> findLastRowId() {
         return dealDao.findLastRowId();
     }
@@ -28,11 +33,6 @@ public class DealService implements IDealService {
     @Override
     public List<Deal> getLastDeals(int limit) {
         return dealDao.getLastDeals(limit);
-    }
-
-    @Override
-    public List<Deal> getDealsAfterTransactionId(long transactionId) {
-        return dealDao.getDealsAfterTransactionId(transactionId);
     }
 
     @Override
@@ -45,5 +45,12 @@ public class DealService implements IDealService {
         dealDao.saveDeal(deal);
 
         logger.debug("Saved: {}", deal);
+    }
+
+    @Override
+    public void updateLastProcessedDealEventId(Deal deal) {
+        dealDao.updateLastProcessedDealEventId(deal);
+
+        logger.debug("Last processed deal: {}", deal);
     }
 }

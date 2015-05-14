@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rx.Observable;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,15 +30,26 @@ public class PaymentScheduler {
     @Transactional
     public void syncPayments() {
 
-        Optional<Long> transactionId = paymentService.findLastTransactionId();
-        List<Deal> deals = transactionId
-                .map(dealService::getDealsAfterTransactionId)
-                .orElse(dealService.getDealsAfterTransactionId(0));
+        Optional<Long> last = dealService.findLastProcessedDealEventId();
+        List<Deal> deals = last
+                .map(dealService::getDealsAfterEventId)
+                .orElse(dealService.getDealsAfterEventId(0));
+
+        if (deals.isEmpty()) {
+            return;
+        }
 
         allegro
                 .login()
                 .getPayments(Observable.from(deals))
                 .forEach(paymentService::savePayment);
+
+        dealService.updateLastProcessedDealEventId(
+                deals
+                .stream()
+                .max(Comparator.comparingLong(Deal::getEventId))
+                .get()
+        );
     }
 
 }

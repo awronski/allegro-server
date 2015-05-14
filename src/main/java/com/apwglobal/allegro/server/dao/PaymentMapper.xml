@@ -2,11 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.apwglobal.allegro.server.dao.PaymentDao">
 
-    <select id="findLastTransactionId" resultType="java.util.Optional">
-        SELECT max(transactionid)
-        FROM payments
-    </select>
-
     <sql id="paymentColumns">
         p.*,
 
@@ -54,7 +49,7 @@
     <select id="getLastPayments" parameterType="int" resultMap="paymentsMap">
         SELECT <include refid="paymentColumns"/>
         <include refid="paymentFromJoins"/>
-        ORDER BY p.transactionid DESC
+        ORDER BY p.date DESC
         LIMIT #{limit}
     </select>
     <select id="getPaymentsBetween" parameterType="map" resultMap="paymentsMap">
@@ -68,14 +63,14 @@
                 AND "date" &lt;= #{to,jdbcType=TIMESTAMP}
             </if>
         </where>
-        ORDER BY p.transactionid DESC
+        ORDER BY p.date DESC
     </select>
 
     <select id="getUnprocessed" resultMap="paymentsMap">
         SELECT <include refid="paymentColumns"/>
         <include refid="paymentFromJoins"/>
         WHERE p.processed = false
-        ORDER BY p.transactionid DESC
+        ORDER BY p.date DESC
     </select>
 
     <update id="updatePaymentAsProcessed" parameterType="long">
@@ -123,7 +118,7 @@
         <result property="city" column="city"/>
         <result property="fullname" column="fullname"/>
         <result property="company" column="company" jdbcType="VARCHAR"/>
-        <result property="phone" column="phone"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
         <result property="nip" column="nip" jdbcType="VARCHAR"/>
     </resultMap>
 
@@ -133,7 +128,7 @@
         </selectKey>
         INSERT INTO addresses
         (id, country, street, code, city, fullname, company, phone, nip)
-        VALUES (#{id}, #{country}, #{street}, #{code}, #{city}, #{fullname}, #{company,jdbcType=VARCHAR}, #{phone},
+        VALUES (#{id}, #{country}, #{street}, #{code}, #{city}, #{fullname}, #{company,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
         #{nip,jdbcType=VARCHAR})
     </insert>
     <insert id="savePayment" keyProperty="transactionId" keyColumn="transactionId">

@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public interface IPaymentService {
 
-    Optional<Long> findLastTransactionId();
-
     List<Payment> getPaymentsBetween(Optional<Date> from, Optional<Date> to);
     List<Payment> getLastPayments(int limit);
 

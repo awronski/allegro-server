@@ -12,7 +12,6 @@ import java.util.Optional;
 
 public interface PaymentDao {
 
-    Optional<Long> findLastTransactionId();
     Payment getPaymentById(long transactionId);
     List<Payment> getLastPayments(int limit);
     List<Payment> getPaymentsBetween(@Param("from") Optional<Date> from, @Param("to") Optional<Date> to);

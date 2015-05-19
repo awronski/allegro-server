@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.2.4
 -- Dumped by pg_dump version 9.2.4
--- Started on 2015-03-31 13:36:31
+-- Started on 2015-05-19 11:45:24
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -13,7 +13,7 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- TOC entry 177 (class 3079 OID 11727)
+-- TOC entry 178 (class 3079 OID 11727)
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -21,8 +21,8 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 1976 (class 0 OID 0)
--- Dependencies: 177
+-- TOC entry 1983 (class 0 OID 0)
+-- Dependencies: 178
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
@@ -36,7 +36,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 170 (class 1259 OID 957214)
+-- TOC entry 168 (class 1259 OID 1043138)
 -- Name: addresses; Type: TABLE; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -47,7 +47,7 @@ CREATE TABLE addresses (
     city character varying(64) NOT NULL,
     fullname character varying(128) NOT NULL,
     company character varying(256),
-    phone character varying(32) NOT NULL,
+    phone character varying(32),
     nip character varying(32),
     country character varying(32) NOT NULL
 );
@@ -56,7 +56,7 @@ CREATE TABLE addresses (
 ALTER TABLE public.addresses OWNER TO alle;
 
 --
--- TOC entry 169 (class 1259 OID 957212)
+-- TOC entry 169 (class 1259 OID 1043144)
 -- Name: addresses_id_seq; Type: SEQUENCE; Schema: public; Owner: alle
 --
 
@@ -71,7 +71,7 @@ CREATE SEQUENCE addresses_id_seq
 ALTER TABLE public.addresses_id_seq OWNER TO alle;
 
 --
--- TOC entry 1977 (class 0 OID 0)
+-- TOC entry 1984 (class 0 OID 0)
 -- Dependencies: 169
 -- Name: addresses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: alle
 --
@@ -80,7 +80,7 @@ ALTER SEQUENCE addresses_id_seq OWNED BY addresses.id;
 
 
 --
--- TOC entry 172 (class 1259 OID 957339)
+-- TOC entry 170 (class 1259 OID 1043146)
 -- Name: auctions; Type: TABLE; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -102,28 +102,31 @@ CREATE TABLE auctions (
     shop boolean NOT NULL,
     payu boolean NOT NULL,
     price double precision NOT NULL,
-    pricetype character varying(8) NOT NULL
+    pricetype character varying(8) NOT NULL,
+    open boolean NOT NULL,
+    sellerid bigint NOT NULL
 );
 
 
 ALTER TABLE public.auctions OWNER TO alle;
 
 --
--- TOC entry 173 (class 1259 OID 957367)
--- Name: auctions_statuses; Type: TABLE; Schema: public; Owner: alle; Tablespace: 
+-- TOC entry 177 (class 1259 OID 1399845)
+-- Name: clients; Type: TABLE; Schema: public; Owner: alle; Tablespace: 
 --
 
-CREATE TABLE auctions_statuses (
-    itemid bigint NOT NULL,
-    ref character varying(8) NOT NULL,
-    status character varying(6) NOT NULL
+CREATE TABLE clients (
+    clientid bigint NOT NULL,
+    username character varying(64) NOT NULL,
+    password character varying(64) NOT NULL,
+    key character varying(64) NOT NULL
 );
 
 
-ALTER TABLE public.auctions_statuses OWNER TO alle;
+ALTER TABLE public.clients OWNER TO alle;
 
 --
--- TOC entry 171 (class 1259 OID 957259)
+-- TOC entry 171 (class 1259 OID 1043152)
 -- Name: deals; Type: TABLE; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -133,7 +136,7 @@ CREATE TABLE deals (
     eventtime timestamp without time zone NOT NULL,
     dealid bigint NOT NULL,
     transactionid bigint,
-    sellerid integer NOT NULL,
+    sellerid bigint NOT NULL,
     itemid bigint NOT NULL,
     buyerid integer NOT NULL,
     quantity integer NOT NULL
@@ -143,7 +146,7 @@ CREATE TABLE deals (
 ALTER TABLE public.deals OWNER TO alle;
 
 --
--- TOC entry 176 (class 1259 OID 965607)
+-- TOC entry 172 (class 1259 OID 1043155)
 -- Name: items; Type: TABLE; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -160,7 +163,7 @@ CREATE TABLE items (
 ALTER TABLE public.items OWNER TO alle;
 
 --
--- TOC entry 168 (class 1259 OID 957201)
+-- TOC entry 173 (class 1259 OID 1043158)
 -- Name: journals; Type: TABLE; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -169,14 +172,28 @@ CREATE TABLE journals (
     itemid bigint NOT NULL,
     changetype character varying(11) NOT NULL,
     changedate timestamp without time zone NOT NULL,
-    currentprice double precision
+    currentprice double precision,
+    sellerid bigint NOT NULL
 );
 
 
 ALTER TABLE public.journals OWNER TO alle;
 
 --
--- TOC entry 174 (class 1259 OID 965569)
+-- TOC entry 176 (class 1259 OID 1395537)
+-- Name: last_processed_deal; Type: TABLE; Schema: public; Owner: alle; Tablespace: 
+--
+
+CREATE TABLE last_processed_deal (
+    eventid bigint NOT NULL,
+    sellerid bigint NOT NULL
+);
+
+
+ALTER TABLE public.last_processed_deal OWNER TO alle;
+
+--
+-- TOC entry 174 (class 1259 OID 1043161)
 -- Name: payments; Type: TABLE; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -195,14 +212,15 @@ CREATE TABLE payments (
     shipment character varying(96) NOT NULL,
     processed boolean NOT NULL,
     orderer_id bigint,
-    receiver_id bigint NOT NULL
+    receiver_id bigint NOT NULL,
+    sellerid bigint NOT NULL
 );
 
 
 ALTER TABLE public.payments OWNER TO alle;
 
 --
--- TOC entry 175 (class 1259 OID 965587)
+-- TOC entry 175 (class 1259 OID 1043167)
 -- Name: payments_processed; Type: TABLE; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -216,7 +234,7 @@ CREATE TABLE payments_processed (
 ALTER TABLE public.payments_processed OWNER TO alle;
 
 --
--- TOC entry 1947 (class 2604 OID 957217)
+-- TOC entry 1951 (class 2604 OID 1307546)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: alle
 --
 
@@ -224,7 +242,7 @@ ALTER TABLE ONLY addresses ALTER COLUMN id SET DEFAULT nextval('addresses_id_seq
 
 
 --
--- TOC entry 1951 (class 2606 OID 957222)
+-- TOC entry 1953 (class 2606 OID 1043172)
 -- Name: addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -233,7 +251,7 @@ ALTER TABLE ONLY addresses
 
 
 --
--- TOC entry 1955 (class 2606 OID 957346)
+-- TOC entry 1955 (class 2606 OID 1043174)
 -- Name: auctions_pkey; Type: CONSTRAINT; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -242,16 +260,25 @@ ALTER TABLE ONLY auctions
 
 
 --
--- TOC entry 1957 (class 2606 OID 957371)
--- Name: auctions_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: alle; Tablespace: 
+-- TOC entry 1969 (class 2606 OID 1399849)
+-- Name: clients_pkey; Type: CONSTRAINT; Schema: public; Owner: alle; Tablespace: 
 --
 
-ALTER TABLE ONLY auctions_statuses
-    ADD CONSTRAINT auctions_statuses_pkey PRIMARY KEY (itemid);
+ALTER TABLE ONLY clients
+    ADD CONSTRAINT clients_pkey PRIMARY KEY (clientid);
 
 
 --
--- TOC entry 1953 (class 2606 OID 957263)
+-- TOC entry 1971 (class 2606 OID 1399851)
+-- Name: clients_username_key; Type: CONSTRAINT; Schema: public; Owner: alle; Tablespace: 
+--
+
+ALTER TABLE ONLY clients
+    ADD CONSTRAINT clients_username_key UNIQUE (username);
+
+
+--
+-- TOC entry 1957 (class 2606 OID 1043176)
 -- Name: deals_pkey; Type: CONSTRAINT; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -260,7 +287,7 @@ ALTER TABLE ONLY deals
 
 
 --
--- TOC entry 1963 (class 2606 OID 965611)
+-- TOC entry 1959 (class 2606 OID 1043178)
 -- Name: items_pkey; Type: CONSTRAINT; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -269,7 +296,7 @@ ALTER TABLE ONLY items
 
 
 --
--- TOC entry 1949 (class 2606 OID 957205)
+-- TOC entry 1961 (class 2606 OID 1043180)
 -- Name: journals_pkey; Type: CONSTRAINT; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -278,7 +305,16 @@ ALTER TABLE ONLY journals
 
 
 --
--- TOC entry 1959 (class 2606 OID 965576)
+-- TOC entry 1967 (class 2606 OID 1399857)
+-- Name: last_processed_deal_pkey; Type: CONSTRAINT; Schema: public; Owner: alle; Tablespace: 
+--
+
+ALTER TABLE ONLY last_processed_deal
+    ADD CONSTRAINT last_processed_deal_pkey PRIMARY KEY (eventid, sellerid);
+
+
+--
+-- TOC entry 1963 (class 2606 OID 1043182)
 -- Name: payments_pkey; Type: CONSTRAINT; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -287,7 +323,7 @@ ALTER TABLE ONLY payments
 
 
 --
--- TOC entry 1961 (class 2606 OID 965591)
+-- TOC entry 1965 (class 2606 OID 1043184)
 -- Name: payments_processed_pkey; Type: CONSTRAINT; Schema: public; Owner: alle; Tablespace: 
 --
 
@@ -296,16 +332,7 @@ ALTER TABLE ONLY payments_processed
 
 
 --
--- TOC entry 1964 (class 2606 OID 957372)
--- Name: auctions_statuses_itemid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: alle
---
-
-ALTER TABLE ONLY auctions_statuses
-    ADD CONSTRAINT auctions_statuses_itemid_fkey FOREIGN KEY (itemid) REFERENCES auctions(id);
-
-
---
--- TOC entry 1968 (class 2606 OID 965612)
+-- TOC entry 1972 (class 2606 OID 1043185)
 -- Name: items_transactionid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: alle
 --
 
@@ -314,7 +341,7 @@ ALTER TABLE ONLY items
 
 
 --
--- TOC entry 1965 (class 2606 OID 965577)
+-- TOC entry 1973 (class 2606 OID 1043190)
 -- Name: payments_orderer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: alle
 --
 
@@ -323,7 +350,7 @@ ALTER TABLE ONLY payments
 
 
 --
--- TOC entry 1967 (class 2606 OID 965592)
+-- TOC entry 1975 (class 2606 OID 1043195)
 -- Name: payments_processed_transactionid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: alle
 --
 
@@ -332,7 +359,7 @@ ALTER TABLE ONLY payments_processed
 
 
 --
--- TOC entry 1966 (class 2606 OID 965582)
+-- TOC entry 1974 (class 2606 OID 1043200)
 -- Name: payments_receiver_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: alle
 --
 
@@ -341,7 +368,7 @@ ALTER TABLE ONLY payments
 
 
 --
--- TOC entry 1975 (class 0 OID 0)
+-- TOC entry 1982 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -352,7 +379,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2015-03-31 13:36:32
+-- Completed on 2015-05-19 11:45:25
 
 --
 -- PostgreSQL database dump complete

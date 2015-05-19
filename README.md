@@ -5,14 +5,14 @@ Because it stores the data locally in the datebase it is fast and reliable.
 You can access the data with any rest client or use our [allegro-client](https://github.com/awronski/allegro-client)
 java library
 
+# What's new?
+Version 2.0 support multi users.
+
 # What does it do?
 It synchronize data with allegro including:
 - transaction journals:
- - new auction
- - change auction
- - end auction
- - buy
- - cancel
+ - new auction, change, end
+ - buy, cancel
 - deals journals:
  - clients orders
  - clients payments
@@ -26,8 +26,7 @@ It give rest api for:
  - deals
  - auctions
  - payments
-- creating new auctions
-- closing auctions
+- creating, changing and closing auctions
 
 ## Requirements
 - Java 8
@@ -41,13 +40,18 @@ It give rest api for:
 git clone https://github.com/awronski/allegro-server.git
 ```
 
-### Create user and database
+### Create database
 ```sql
 CREATE USER alle;
 ALTER ROLE alle PASSWORD 'password';
 CREATE DATABASE alledb OWNER alle ENCODING = 'UTF-8';
 ```
 Create schema from ```src/resources/db/db_postgres.sqldb```
+
+### Create allegro sellers
+```sql
+INSERT INTO clients select clientId, 'username', 'passwords', 'webapi_key';
+```
 
 ### Set configuration
 Rename file ```application.template``` to ```application.properties``` and change settings.
@@ -56,8 +60,6 @@ Rename file ```application.template``` to ```application.properties``` and chang
 ```
 mvn package && java -jar target/allegro-server.jar
 ```
-
-### _... work in progress_
 
 License
 =======

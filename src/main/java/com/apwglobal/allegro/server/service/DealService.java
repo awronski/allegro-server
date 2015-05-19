@@ -21,23 +21,23 @@ public class DealService implements IDealService {
     private DealDao dealDao;
 
     @Override
-    public Optional<Long> findLastProcessedDealEventId() {
-        return dealDao.findLastProcessedDealEventId();
+    public Optional<Long> findLastProcessedDealEventId(long sellerId) {
+        return dealDao.findLastProcessedDealEventId(sellerId);
     }
 
     @Override
-    public Optional<Long> findLastRowId() {
-        return dealDao.findLastRowId();
+    public Optional<Long> findLastRowId(long sellerId) {
+        return dealDao.findLastRowId(sellerId);
     }
 
     @Override
-    public List<Deal> getLastDeals(int limit) {
-        return dealDao.getLastDeals(limit);
+    public List<Deal> getLastDeals(long sellerId, int limit) {
+        return dealDao.getLastDeals(sellerId, limit);
     }
 
     @Override
-    public List<Deal> getDealsAfterEventId(long eventId) {
-        return dealDao.getDealsAfterEventId(eventId);
+    public List<Deal> getDealsAfterEventId(long sellerId, long eventId) {
+        return dealDao.getDealsAfterEventId(sellerId, eventId);
     }
 
     @Override
@@ -52,5 +52,13 @@ public class DealService implements IDealService {
         dealDao.updateLastProcessedDealEventId(deal);
 
         logger.debug("Last processed deal: {}", deal);
+    }
+
+    @Override
+    public long createLastProcessedDealEventId(long sellerId) {
+        dealDao.createLastProcessedDealEventId(sellerId);
+
+        logger.debug("Created Last processed deal event id for seller: {}", sellerId);
+        return 0l;
     }
 }

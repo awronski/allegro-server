@@ -10,12 +10,5 @@ info.app.version=@project.version@
 management.health.diskspace.threshold=1073741824
 http.mappers.jsonPrettyPrint=true
 
-security.user.name=admin
-security.user.password=secret
-management.security.role=SUPERUSER
-
-allegro.username=username
-allegro.password=password!
 allegro.country=1
-allegro.key=key
 allegro.sandbox=false

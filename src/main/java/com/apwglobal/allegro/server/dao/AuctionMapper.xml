@@ -4,28 +4,28 @@
     <select id="getAuctions" parameterType="map" resultType="com.apwglobal.nice.domain.Auction">
         SELECT *
         FROM auctions
-        <where>
-            <if test="open.isPresent()">
-                open = #{open,jdbcType=BOOLEAN}
-            </if>
-        </where>
+        WHERE
+            sellerid=#{sellerId}
+        <if test="open.isPresent()">
+             AND open = #{open,jdbcType=BOOLEAN}
+        </if>
         ORDER BY id DESC
         <if test="limit.isPresent()">
             limit #{limit,jdbcType=INTEGER}
         </if>
     </select>
 
-    <select id="getAuctionById" parameterType="long" resultType="com.apwglobal.nice.domain.Auction">
-        SELECT * FROM auctions WHERE id = #{id}
+    <select id="getAuctionById" parameterType="map" resultType="com.apwglobal.nice.domain.Auction">
+        SELECT * FROM auctions WHERE id = #{itemId} AND sellerid = #{sellerId}
     </select>
 
     <insert id="saveAuction" parameterType="com.apwglobal.nice.domain.Auction" keyProperty="Id">
         INSERT INTO auctions
-        (id, title, thumbnailUrl, startQuantity, soldQuantity, quantityType, startTime,
+        (id, sellerId, title, thumbnailUrl, startQuantity, soldQuantity, quantityType, startTime,
          endTime, biddersCounter, categoryId, watchersCounter, viewsCounter,
          note, special, shop, payu, price, priceType, "open")
         VALUES (
-            #{id}, #{title}, #{thumbnailUrl}, #{startQuantity}, #{soldQuantity}, #{quantityType}, #{startTime},
+            #{id}, #{sellerId}, #{title}, #{thumbnailUrl}, #{startQuantity}, #{soldQuantity}, #{quantityType}, #{startTime},
             #{endTime,jdbcType=TIMESTAMP}, #{biddersCounter}, #{categoryId}, #{watchersCounter}, #{viewsCounter},
             #{note}, #{special}, #{shop}, #{payu}, #{price}, #{priceType}, #{open}
         )
@@ -41,8 +41,8 @@
         WHERE id = #{id}
     </update>
 
-    <update id="closeAuction" parameterType="com.apwglobal.nice.domain.Auction">
-        UPDATE auctions SET open = false WHERE id = #{itemId}
+    <update id="closeAuction" parameterType="map">
+        UPDATE auctions SET open = false WHERE id = #{itemId} AND sellerid = #{sellerId}
     </update>
 
 </mapper>

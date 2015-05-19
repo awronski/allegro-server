@@ -9,12 +9,12 @@ import java.util.Optional;
 
 public interface IPaymentService {
 
-    List<Payment> getPaymentsBetween(Optional<Date> from, Optional<Date> to);
-    List<Payment> getLastPayments(int limit);
+    List<Payment> getPaymentsBetween(long sellerId, Optional<Date> from, Optional<Date> to);
+    List<Payment> getLastPayments(long sellerId, int limit);
 
     void savePayment(Payment f);
 
-    List<Payment> getUnprocessed();
-    PaymentProcessed processed(long transactionId, double amount, String ref);
+    List<Payment> getUnprocessed(long sellerId);
+    PaymentProcessed processed(long sellerId, long transactionId, double amount, String ref);
 
 }

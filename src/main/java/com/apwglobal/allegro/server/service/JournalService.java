@@ -22,13 +22,13 @@ public class JournalService implements IJournalService {
 
 
     @Override
-    public Optional<Long> findLastRowId() {
-        return journalDao.findLastRowId();
+    public Optional<Long> findLastRowId(long sellerId) {
+        return journalDao.findLastRowId(sellerId);
     }
 
     @Override
-    public List<Journal> getLastJournals(int limit) {
-        return journalDao.getLastJournals(limit);
+    public List<Journal> getLastJournals(long sellerId, int limit) {
+        return journalDao.getLastJournals(sellerId, limit);
     }
 
     @Override

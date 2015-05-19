@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-public class DealController implements JsonpControllerAdvice {
+public class DealController implements JsonpControllerAdvice, ClientIdAwareController {
 
     @Autowired
     private IDealService dealService;
@@ -20,13 +20,13 @@ public class DealController implements JsonpControllerAdvice {
     @RequestMapping("/deals")
     @ResponseBody
     public List<Deal> deals(@RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
-        return dealService.getLastDeals(limit);
+        return dealService.getLastDeals(getClientId(), limit);
     }
 
     @RequestMapping("/deals/after/eventId/{eventId}")
     @ResponseBody
     public List<Deal> dealsAfterEventId(@PathVariable(value = "eventId") long eventId) {
-        return dealService.getDealsAfterEventId(eventId);
+        return dealService.getDealsAfterEventId(getClientId(), eventId);
     }
 
 }

@@ -40,36 +40,37 @@
         INNER JOIN items i ON p.transactionid = i.transactionid
     </sql>
 
-    <select id="getPaymentById" parameterType="long" resultMap="paymentsMap">
+    <select id="getPaymentById" parameterType="map" resultMap="paymentsMap">
         SELECT <include refid="paymentColumns"/>
         <include refid="paymentFromJoins"/>
-        WHERE p.transactionId = #{transactionId}
+        WHERE p.transactionId = #{transactionId} AND p.sellerId = #{sellerId}
     </select>
 
-    <select id="getLastPayments" parameterType="int" resultMap="paymentsMap">
+    <select id="getLastPayments" parameterType="map" resultMap="paymentsMap">
         SELECT <include refid="paymentColumns"/>
         <include refid="paymentFromJoins"/>
+        WHERE sellerid = #{sellerId}
         ORDER BY p.date DESC
         LIMIT #{limit}
     </select>
     <select id="getPaymentsBetween" parameterType="map" resultMap="paymentsMap">
         SELECT <include refid="paymentColumns"/>
         <include refid="paymentFromJoins"/>
-        <where>
+        WHERE
+            sellerId = #{sellerId}
             <if test="from.isPresent()">
-                "date" &gt;= #{from,jdbcType=TIMESTAMP}
+                AND "date" &gt;= #{from,jdbcType=TIMESTAMP}
             </if>
             <if test="to.isPresent()">
                 AND "date" &lt;= #{to,jdbcType=TIMESTAMP}
             </if>
-        </where>
         ORDER BY p.date DESC
     </select>
 
-    <select id="getUnprocessed" resultMap="paymentsMap">
+    <select id="getUnprocessed" parameterType="long" resultMap="paymentsMap">
         SELECT <include refid="paymentColumns"/>
         <include refid="paymentFromJoins"/>
-        WHERE p.processed = false
+        WHERE p.sellerId = #{sellerId} AND p.processed = false
         ORDER BY p.date DESC
     </select>
 
@@ -83,6 +84,7 @@
 
     <resultMap id="paymentsMap" type="com.apwglobal.nice.domain.Payment">
         <id property="transactionId" column="transactionId"/>
+        <result property="sellerId" column="sellerId"/>
         <result property="buyerId" column="buyerId"/>
         <result property="email" column="email"/>
         <result property="date" column="date"/>
@@ -133,9 +135,9 @@
     </insert>
     <insert id="savePayment" keyProperty="transactionId" keyColumn="transactionId">
         INSERT INTO payments
-        (transactionid, buyerid, email, "date", amount, postageamount, paymentamount, withinvoice,
+        (transactionid, buyerid, sellerId, email, "date", amount, postageamount, paymentamount, withinvoice,
          msg, payid, paystatus, shipment, processed, orderer_id, receiver_id)
-        VALUES (#{transactionId}, #{buyerId}, #{email}, #{date}, #{amount}, #{postageAmount}, #{paymentAmount}, #{withInvoice},
+        VALUES (#{transactionId}, #{buyerId}, #{sellerId}, #{email}, #{date}, #{amount}, #{postageAmount}, #{paymentAmount}, #{withInvoice},
                 #{msg,jdbcType=VARCHAR}, #{payId}, #{payStatus}, #{shipment}, #{processed}, #{orderer.id}, #{receiver.id})
     </insert>
     <insert id="saveItem">

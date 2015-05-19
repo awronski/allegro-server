@@ -1,7 +1,7 @@
 package com.apwglobal.allegro.server.controller;
 
+import com.apwglobal.allegro.server.service.IAllegroClientFactory;
 import com.apwglobal.nice.domain.FormField;
-import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
@@ -14,10 +14,10 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Controller
-public class FormFieldController implements JsonpControllerAdvice {
+public class FormFieldController implements JsonpControllerAdvice, ClientIdAwareController {
 
     @Autowired
-    private IAllegroNiceApi allegro;
+    private IAllegroClientFactory allegro;
 
     @Cacheable(value = "form-fields")
     @RequestMapping("/form-fields")
@@ -26,7 +26,7 @@ public class FormFieldController implements JsonpControllerAdvice {
             @RequestParam(required = true) int categoryId,
             @RequestParam(required = false, defaultValue = "true") boolean onlyRequired) {
 
-        List<FormField> fields = allegro
+        List<FormField> fields = allegro.get(getClientId())
                 .getSellFormFields(categoryId);
 
         return filter(fields, onlyRequired);

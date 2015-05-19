@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface AuctionDao {
 
-    List<Auction> getAuctions(@Param("open") Optional<Boolean> open, @Param("limit") Optional<Integer> limit);
-    Auction getAuctionById(long itemId);
+    List<Auction> getAuctions(@Param("sellerId") long sellerId, @Param("open") Optional<Boolean> open, @Param("limit") Optional<Integer> limit);
+    Auction getAuctionById(@Param("sellerId") long sellerId, @Param("itemId") long itemId);
 
     void saveAuction(Auction auction);
     void updateAuction(Auction auction);
-    void closeAuction(long itemId);
+    void closeAuction(@Param("sellerId") long sellerId, @Param("itemId") long itemId);
 
 }

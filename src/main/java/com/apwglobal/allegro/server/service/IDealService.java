@@ -7,12 +7,13 @@ import java.util.Optional;
 
 public interface IDealService {
 
-    Optional<Long> findLastProcessedDealEventId();
-    Optional<Long> findLastRowId();
-    List<Deal> getLastDeals(int limit);
-    List<Deal> getDealsAfterEventId(long eventId);
+    Optional<Long> findLastProcessedDealEventId(long sellerId);
+    Optional<Long> findLastRowId(long sellerId);
+    List<Deal> getLastDeals(long sellerId, int limit);
+    List<Deal> getDealsAfterEventId(long sellerId, long eventId);
 
     void saveDeal(Deal deal);
     void updateLastProcessedDealEventId(Deal deal);
+    long createLastProcessedDealEventId(long sellerId);
 
 }

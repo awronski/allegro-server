@@ -1,6 +1,6 @@
 package com.apwglobal.allegro.server.indicator;
 
-import com.apwglobal.nice.service.IAllegroNiceApi;
+import com.apwglobal.allegro.server.service.IAllegroClientFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
@@ -11,11 +11,11 @@ import pl.allegro.webapi.SysStatusType;
 public class AllegoVersionHealthIndicator extends AbstractHealthIndicator {
 
     @Autowired
-    private IAllegroNiceApi allegro;
+    private IAllegroClientFactory allegro;
 
     @Override
     protected void doHealthCheck(Health.Builder builder) throws Exception {
-        SysStatusType status = allegro.getStatus();
+        SysStatusType status = allegro.getAll().get(0).getStatus();
 
         builder.withDetail("apiVersion", status.getApiVersion());
         builder.withDetail("attribVersion", status.getAttribVersion());

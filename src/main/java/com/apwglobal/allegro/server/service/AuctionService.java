@@ -3,8 +3,6 @@ package com.apwglobal.allegro.server.service;
 import com.apwglobal.allegro.server.dao.AuctionDao;
 import com.apwglobal.allegro.server.exception.ResourceNotFoundException;
 import com.apwglobal.nice.domain.*;
-import com.apwglobal.nice.service.IAllegroNiceApi;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +22,17 @@ public class AuctionService implements IAuctionService {
     private AuctionDao auctionDao;
 
     @Autowired
-    private IAllegroNiceApi allegro;
+    private IAllegroClientFactory allegro;
 
 
     @Override
-    public List<Auction> getAuctions(Optional<Boolean> open, Optional<Integer> limit) {
-        return auctionDao.getAuctions(open, limit);
+    public List<Auction> getAuctions(long sellerId, Optional<Boolean> open, Optional<Integer> limit) {
+        return auctionDao.getAuctions(sellerId, open, limit);
     }
 
     @Override
-    public Optional<Auction> getAuctionById(long itemId) {
-        return Optional.ofNullable(auctionDao.getAuctionById(itemId));
+    public Optional<Auction> getAuctionById(long sellerId, long itemId) {
+        return Optional.ofNullable(auctionDao.getAuctionById(sellerId, itemId));
     }
 
     @Override
@@ -48,16 +46,16 @@ public class AuctionService implements IAuctionService {
     public void updateAuction(Auction auction) {
         auctionDao.updateAuction(auction);
 
-        logger.debug("Updated: {}", auction);
+        logger.trace("Updated: {}", auction);
     }
 
     @Override
-    public ChangedQty changeQty(long itemId, int newQty) {
-        if (!getAuctionById(itemId).isPresent()) {
+    public ChangedQty changeQty(long sellerId, long itemId, int newQty) {
+        if (!getAuctionById(sellerId, itemId).isPresent()) {
             throw new ResourceNotFoundException();
         }
 
-        ChangedQty changedQty = allegro.changeQty(itemId, newQty);
+        ChangedQty changedQty = allegro.get(sellerId).changeQty(itemId, newQty);
         logger.debug("Changed qty: {}", changedQty);
 
         //TODO update auction in db
@@ -66,17 +64,17 @@ public class AuctionService implements IAuctionService {
     }
 
     @Override
-    public List<FinishAuctionFailure> finishAuctions(List<Long> itemsIds) {
+    public List<FinishAuctionFailure> finishAuctions(long sellerId, List<Long> itemsIds) {
         logger.debug("Finishing auctions: {}", itemsIds);
-        List<FinishAuctionFailure> failures = allegro.finishAuctions(itemsIds);
+        List<FinishAuctionFailure> failures = allegro.get(sellerId).finishAuctions(itemsIds);
         logger.debug("Finished auctions failures: {}", failures);
 
         return failures;
     }
 
     @Override
-    public CreatedAuction createNewAuction(List<NewAuctionField> fields) {
-        CreatedAuction newAuction = allegro.createNewAuction(fields);
+    public CreatedAuction createNewAuction(long sellerId, List<NewAuctionField> fields) {
+        CreatedAuction newAuction = allegro.get(sellerId).createNewAuction(fields);
         logger.debug("Created: {}", newAuction);
 
         return newAuction;
@@ -85,8 +83,8 @@ public class AuctionService implements IAuctionService {
     //TODO reopen auction if there was error at allegro
 
     @Override
-    public void closeAuction(long itemId) {
-        auctionDao.closeAuction(itemId);
+    public void closeAuction(long sellerId, long itemId) {
+        auctionDao.closeAuction(sellerId, itemId);
         logger.debug("Finished: {}", itemId);
     }
 

@@ -1,5 +1,6 @@
 package com.apwglobal.allegro.server.scheduler;
 
+import com.apwglobal.allegro.server.service.IAllegroClientFactory;
 import com.apwglobal.allegro.server.service.IAuctionService;
 import com.apwglobal.nice.domain.Auction;
 import com.apwglobal.nice.service.IAllegroNiceApi;
@@ -19,7 +20,7 @@ import static java.util.stream.Collectors.toList;
 public class AuctionScheduler {
 
     @Autowired
-    private IAllegroNiceApi allegro;
+    private IAllegroClientFactory allegro;
 
     @Autowired
     private IAuctionService auctionService;
@@ -41,15 +42,17 @@ public class AuctionScheduler {
     }
 
     private boolean exists(Auction a) {
-        return auctionService.getAuctionById(a.getId()).isPresent();
+        return auctionService.getAuctionById(a.getSellerId(), a.getId()).isPresent();
     }
 
     private void doAuctions(Func1<Auction, Boolean> predicate, Action1<Auction> consumer) {
         allegro
-                .login()
-                .getAuctions()
-                .filter(predicate)
-                .forEach(consumer);
+                .getAll()
+                .stream()
+                .forEach(c -> c.login()
+                        .getAuctions()
+                        .filter(predicate)
+                        .forEach(consumer));
     }
 
 
@@ -57,7 +60,13 @@ public class AuctionScheduler {
     @Scheduled(fixedDelay=13 * 60000)
     @Transactional
     public void closeAuctions() {
-        List<Long> inDb  = auctionService.getAuctions(Optional.of(true), Optional.empty())
+        allegro
+                .getAll()
+                .forEach(this::closeAuctionsForGivenClient);
+    }
+
+    private void closeAuctionsForGivenClient(IAllegroNiceApi client) {
+        List<Long> inDb = auctionService.getAuctions(client.getClientId(), Optional.of(true), Optional.empty())
                 .stream()
                 .map(Auction::getId)
                 .collect(toList());
@@ -67,7 +76,7 @@ public class AuctionScheduler {
         }
 
         //TODO what to do if auction is open but allegro did not refreshed list yet?
-        List<Long> inAllegro = allegro
+        List<Long> inAllegro = client
                 .login()
                 .getAuctions()
                 .map(Auction::getId)
@@ -78,7 +87,7 @@ public class AuctionScheduler {
         inDb
                 .stream()
                 .filter(a -> !inAllegro.contains(a))
-                .forEach(auctionService::closeAuction);
+                .forEach(a -> auctionService.closeAuction(client.getClientId(), a));
     }
 
 }

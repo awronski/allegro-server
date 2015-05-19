@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-public class FeedbackController implements IFeedbackController {
+public class FeedbackController implements IFeedbackController, ClientIdAwareController {
 
     @Autowired
     private IFeedbackService feedbackService;
@@ -23,13 +23,13 @@ public class FeedbackController implements IFeedbackController {
     @RequestMapping("/feedbacks/waiting/onlyPaid")
     @ResponseBody
     public List<WaitingFeedback> waitingFeedbackOnlyForPaidOrders() {
-        return feedbackService.getWaitingFeedbackOnlyForPaidOrders();
+        return feedbackService.getWaitingFeedbackOnlyForPaidOrders(getClientId());
     }
 
     @RequestMapping(value = "/feedbacks/create", method = RequestMethod.POST)
     @ResponseBody
     public List<CreatedFeedback> create(@RequestBody List<CreateFeedback> feedbacks) {
-        return feedbackService.createFeedbacks(feedbacks);
+        return feedbackService.createFeedbacks(getClientId(), feedbacks);
     }
 
 }

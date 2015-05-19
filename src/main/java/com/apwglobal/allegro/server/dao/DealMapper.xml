@@ -2,26 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.apwglobal.allegro.server.dao.DealDao">
 
-    <select id="findLastProcessedDealEventId" resultType="java.util.Optional">
-        select eventid from last_processed_deal
+    <select id="findLastProcessedDealEventId" parameterType="long" resultType="java.util.Optional">
+        SELECT max(eventid) FROM last_processed_deal WHERE sellerid = #{sellerId}
     </select>
 
-    <select id="findLastRowId" resultType="java.util.Optional">
+    <select id="findLastRowId" parameterType="long" resultType="java.util.Optional">
         SELECT max(eventid)
         FROM deals
+        WHERE sellerid = #{sellerId}
     </select>
 
-    <select id="getLastDeals" parameterType="int" resultType="com.apwglobal.nice.domain.Deal">
+    <select id="getLastDeals" parameterType="map" resultType="com.apwglobal.nice.domain.Deal">
         SELECT *
         FROM deals
+        WHERE sellerid = #{sellerId}
         ORDER BY eventid DESC
         LIMIT #{limit}
     </select>
 
-    <select id="getDealsAfterEventId" parameterType="long" resultType="com.apwglobal.nice.domain.Deal">
+    <select id="getDealsAfterEventId" parameterType="map" resultType="com.apwglobal.nice.domain.Deal">
         SELECT *
         FROM deals
-        WHERE eventId > #{eventId}
+        WHERE sellerid = #{sellerId} AND eventId > #{eventId}
         ORDER BY eventId ASC
     </select>
 
@@ -34,7 +36,12 @@
     </insert>
 
     <update id="updateLastProcessedDealEventId" parameterType="com.apwglobal.nice.domain.Deal">
-        UPDATE last_processed_deal SET eventid = #{eventId}
+        UPDATE last_processed_deal SET eventid = #{eventId} WHERE sellerid = #{sellerId}
     </update>
+
+    <insert id="createLastProcessedDealEventId" parameterType="long">
+        INSERT INTO last_processed_deal (eventid, sellerid)
+        VALUES (0, #{sellerId})
+    </insert>
 
 </mapper>

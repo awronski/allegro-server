@@ -12,9 +12,9 @@ import java.util.Optional;
 
 public interface PaymentDao {
 
-    Payment getPaymentById(long transactionId);
-    List<Payment> getLastPayments(int limit);
-    List<Payment> getPaymentsBetween(@Param("from") Optional<Date> from, @Param("to") Optional<Date> to);
+    Payment getPaymentById(@Param("sellerId") long sellerId, @Param("transactionId") long transactionId);
+    List<Payment> getLastPayments(@Param("sellerId") long sellerId, @Param("limit") int limit);
+    List<Payment> getPaymentsBetween(@Param("sellerId") long sellerId, @Param("from") Optional<Date> from, @Param("to") Optional<Date> to);
 
     void saveAddress(Address address);
     void savePayment(Payment form);
@@ -24,7 +24,7 @@ public interface PaymentDao {
 
     PaymentProcessed findPaymentProcessed(long transactionId);
     void savePaymentProcessed(PaymentProcessed payment);
-    List<Payment> getUnprocessed();
+    List<Payment> getUnprocessed(long sellerId);
 
     boolean wasItemPaid(@Param("from") Date from, @Param("itemId") long itemId, @Param("buyerId") int buyerId);
 

@@ -7,8 +7,8 @@ import java.util.Optional;
 
 public interface IJournalService {
 
-    Optional<Long> findLastRowId();
-    List<Journal> getLastJournals(int limit);
+    Optional<Long> findLastRowId(long sellerId);
+    List<Journal> getLastJournals(long sellerId, int limit);
 
     void saveJournal(Journal journal);
 

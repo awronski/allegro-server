@@ -3,21 +3,22 @@
 <mapper namespace="com.apwglobal.allegro.server.dao.JournalDao">
 
 
-    <select id="findLastRowId" resultType="java.util.Optional">
-        SELECT max(rowid) FROM journals
+    <select id="findLastRowId" parameterType="long" resultType="java.util.Optional">
+        SELECT max(rowid) FROM journals WHERE sellerid = #{sellerId}
     </select>
 
-    <select id="getLastJournals" parameterType="int" resultType="com.apwglobal.nice.domain.Journal">
+    <select id="getLastJournals" parameterType="map" resultType="com.apwglobal.nice.domain.Journal">
         SELECT * FROM journals
+        WHERE sellerid = #{sellerId}
         ORDER BY rowid DESC
         LIMIT #{limit}
     </select>
 
     <insert id="saveJournal">
         INSERT INTO journals
-            (rowid, itemid, changetype, changedate, currentprice)
+            (rowid, itemid, sellerId, changetype, changedate, currentprice)
         VALUES
-            (#{rowId}, #{itemId}, #{changeType}, #{changeDate}, #{currentPrice,jdbcType=DOUBLE})
+            (#{rowId}, #{itemId}, #{sellerId}, #{changeType}, #{changeDate}, #{currentPrice,jdbcType=DOUBLE})
     </insert>
 
 </mapper>

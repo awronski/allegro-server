@@ -1,5 +1,6 @@
 package com.apwglobal.allegro.server.scheduler;
 
+import com.apwglobal.allegro.server.service.IAllegroClientFactory;
 import com.apwglobal.allegro.server.service.IDealService;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.Optional;
 public class DealScheduler {
 
     @Autowired
-    private IAllegroNiceApi allegro;
+    private IAllegroClientFactory allegro;
 
     @Autowired
     private IDealService dealService;
@@ -21,9 +22,15 @@ public class DealScheduler {
     @Scheduled(fixedDelay=7 * 60000)
     @Transactional
     public void syncDeals() {
-        Optional<Long> lastEventId = dealService.findLastRowId();
-
         allegro
+                .getAll()
+                .forEach(this::syncDealsForGivenClient);
+    }
+
+    private void syncDealsForGivenClient(IAllegroNiceApi client) {
+        Optional<Long> lastEventId = dealService.findLastRowId(client.getClientId());
+
+        client
                 .login()
                 .getDeals(lastEventId.orElse(0l))
                 .forEach(dealService::saveDeal);

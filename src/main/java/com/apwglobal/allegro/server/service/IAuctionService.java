@@ -7,15 +7,15 @@ import java.util.Optional;
 
 public interface IAuctionService {
 
-    List<Auction> getAuctions(Optional<Boolean> open, Optional<Integer> limit);
-    Optional<Auction> getAuctionById(long itemId);
+    List<Auction> getAuctions(long sellerId, Optional<Boolean> open, Optional<Integer> limit);
+    Optional<Auction> getAuctionById(long sellerId, long itemId);
     void saveAuction(Auction auction);
     void updateAuction(Auction auction);
 
-    ChangedQty changeQty(long itemId, int newQty);
-    List<FinishAuctionFailure> finishAuctions(List<Long> itemsIds);
-    CreatedAuction createNewAuction(List<NewAuctionField> fields);
+    ChangedQty changeQty(long sellerId, long itemId, int newQty);
+    List<FinishAuctionFailure> finishAuctions(long sellerId, List<Long> itemsIds);
+    CreatedAuction createNewAuction(long sellerId, List<NewAuctionField> fields);
 
-    void closeAuction(long itemId);
+    void closeAuction(long sellerId, long itemId);
 
 }

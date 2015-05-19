@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IFeedbackService {
 
-    List<WaitingFeedback> getWaitingFeedbackOnlyForPaidOrders();
-    List<CreatedFeedback> createFeedbacks(List<CreateFeedback> feedbacks);
+    List<WaitingFeedback> getWaitingFeedbackOnlyForPaidOrders(long sellerId);
+    List<CreatedFeedback> createFeedbacks(long sellerId, List<CreateFeedback> feedbacks);
 
 }

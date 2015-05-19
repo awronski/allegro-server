@@ -23,13 +23,13 @@ public class PaymentService implements IPaymentService {
     private PaymentDao paymentDao;
 
     @Override
-    public List<Payment> getPaymentsBetween(Optional<Date> from, Optional<Date> to) {
-        return paymentDao.getPaymentsBetween(from, to);
+    public List<Payment> getPaymentsBetween(long sellerId, Optional<Date> from, Optional<Date> to) {
+        return paymentDao.getPaymentsBetween(sellerId, from, to);
     }
 
     @Override
-    public List<Payment> getLastPayments(int limit) {
-        return paymentDao.getLastPayments(limit);
+    public List<Payment> getLastPayments(long sellerId, int limit) {
+        return paymentDao.getLastPayments(sellerId, limit);
     }
 
 
@@ -60,8 +60,8 @@ public class PaymentService implements IPaymentService {
 
 
     @Override
-    public PaymentProcessed processed(long transactionId, double amount, String ref) {
-        Payment payment = paymentDao.getPaymentById(transactionId);
+    public PaymentProcessed processed(long sellerId, long transactionId, double amount, String ref) {
+        Payment payment = paymentDao.getPaymentById(sellerId, transactionId);
         check(payment, transactionId, amount);
 
         PaymentProcessed processed = paymentDao.findPaymentProcessed(transactionId);
@@ -87,7 +87,7 @@ public class PaymentService implements IPaymentService {
     }
 
     @Override
-    public List<Payment> getUnprocessed() {
-        return paymentDao.getUnprocessed();
+    public List<Payment> getUnprocessed(long sellerId) {
+        return paymentDao.getUnprocessed(sellerId);
     }
 }

@@ -16,7 +16,7 @@ import static com.apwglobal.allegro.server.controller.util.TestOptional.exist;
 import static java.util.stream.Collectors.toList;
 
 @Controller
-public class PaymentController implements IPaymentController {
+public class PaymentController implements IPaymentController, ClientIdAwareController {
 
     public static final int SEARCH_LIMIT = 100;
 
@@ -25,12 +25,12 @@ public class PaymentController implements IPaymentController {
 
     @Override
     public List<Payment> payments(@RequestParam(value = "limit", required = false, defaultValue = "50") int limit) {
-        return paymentService.getLastPayments(limit);
+        return paymentService.getLastPayments(getClientId(), limit);
     }
 
     @Override
     public List<Payment> search(@RequestBody SearchPayment s) {
-        return paymentService.getPaymentsBetween(s.getFrom(), s.getTo())
+        return paymentService.getPaymentsBetween(getClientId(), s.getFrom(), s.getTo())
                 .stream()
                 .filter(f -> eq(s.getBuyerId(), f.getBuyerId()))
                 .filter(f -> eq(s.getEmail(), f.getEmail()))
@@ -47,12 +47,12 @@ public class PaymentController implements IPaymentController {
                                     @RequestParam("amount") double amount,
                                     @RequestParam("ref") String ref) {
 
-        return paymentService.processed(transactionId, amount, ref);
+        return paymentService.processed(getClientId(), transactionId, amount, ref);
     }
 
     @Override
     public List<Payment> unprocessed() {
-        return paymentService.getUnprocessed();
+        return paymentService.getUnprocessed(getClientId());
     }
 
 }

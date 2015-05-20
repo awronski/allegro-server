@@ -46,6 +46,7 @@ public class AllegroClientFactory implements IAllegroClientFactory {
     }
 
     private AllegroNiceApi createClient(Client client) {
+        logger.debug("Creating allegro client: {}", client.getUsername());
         com.apwglobal.nice.service.Configuration conf = new com.apwglobal.nice.service.Configuration(prop.getCountry());
         Credentials cred = new Credentials(client.getClientId(), client.getUsername(), client.getPassword(), client.getKey());
         return new AllegroNiceApi.Builder()

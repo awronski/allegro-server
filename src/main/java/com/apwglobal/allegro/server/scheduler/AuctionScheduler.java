@@ -4,6 +4,8 @@ import com.apwglobal.allegro.server.service.IAllegroClientFactory;
 import com.apwglobal.allegro.server.service.IAuctionService;
 import com.apwglobal.nice.domain.Auction;
 import com.apwglobal.nice.service.IAllegroNiceApi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class AuctionScheduler {
 
+    private final static Logger logger = LoggerFactory.getLogger(AuctionScheduler.class);
+
     @Autowired
     private IAllegroClientFactory allegro;
 
@@ -28,6 +32,7 @@ public class AuctionScheduler {
     @Scheduled(fixedDelay=11 * 60000)
     @Transactional
     public void syncAuctions() {
+        logger.debug("Starting syncAuctions");
         doAuctions(
                 a -> !exists(a),
                 auctionService::saveAuction);
@@ -36,6 +41,7 @@ public class AuctionScheduler {
     @Scheduled(fixedDelay=9 * 60000)
     @Transactional
     public void updateAuctions() {
+        logger.debug("Starting updateAuctions");
         doAuctions(
                 this::exists,
                 auctionService::updateAuction);
@@ -60,6 +66,7 @@ public class AuctionScheduler {
     @Scheduled(fixedDelay=13 * 60000)
     @Transactional
     public void closeAuctions() {
+        logger.debug("Starting closeAuctions");
         allegro
                 .getAll()
                 .forEach(this::closeAuctionsForGivenClient);

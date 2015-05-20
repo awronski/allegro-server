@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.toMap;
 @Service
 public class AllegroClientFactory implements IAllegroClientFactory {
 
-    private final static Logger logger = LoggerFactory.getLogger(AuctionService.class);
+    private final static Logger logger = LoggerFactory.getLogger(AllegroClientFactory.class);
 
     @Autowired
     private AllegroProperties prop;

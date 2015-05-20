@@ -3,6 +3,8 @@ package com.apwglobal.allegro.server.scheduler;
 import com.apwglobal.allegro.server.service.IAllegroClientFactory;
 import com.apwglobal.allegro.server.service.IJournalService;
 import com.apwglobal.nice.service.IAllegroNiceApi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ import java.util.Optional;
 @Service
 public class JournalScheduler {
 
+    private final static Logger logger = LoggerFactory.getLogger(JournalScheduler.class);
+
     @Autowired
     private IAllegroClientFactory allegro;
 
@@ -22,6 +26,7 @@ public class JournalScheduler {
     @Scheduled(fixedDelay=5 * 60000)
     @Transactional
     public void syncJournal() {
+        logger.debug("Starting syncJournal");
         allegro
                 .getAll()
                 .forEach(this::syncJournalForGivenClient);

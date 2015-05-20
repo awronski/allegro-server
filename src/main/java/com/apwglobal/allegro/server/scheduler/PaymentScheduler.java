@@ -5,6 +5,8 @@ import com.apwglobal.allegro.server.service.IDealService;
 import com.apwglobal.allegro.server.service.IPaymentService;
 import com.apwglobal.nice.domain.Deal;
 import com.apwglobal.nice.service.IAllegroNiceApi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import static java.util.Comparator.comparingLong;
 @Service
 public class PaymentScheduler {
 
+    private final static Logger logger = LoggerFactory.getLogger(PaymentScheduler.class);
+
     @Autowired
     private IAllegroClientFactory allegro;
 
@@ -31,6 +35,7 @@ public class PaymentScheduler {
     @Scheduled(fixedDelay = 15 * 60000)
     @Transactional
     public void syncPayments() {
+        logger.debug("Starting syncPayments");
         allegro
                 .getAll()
                 .forEach(this::syncPaymentsForGivenClient);

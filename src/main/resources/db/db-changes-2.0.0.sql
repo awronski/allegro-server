@@ -26,7 +26,7 @@ ALTER TABLE last_processed_deal ADD sellerId BIGINT;
 --UPDATE last_processed_deal SET sellerId=XX;
 ALTER TABLE last_processed_deal ALTER sellerId SET NOT NULL;
 ALTER TABLE last_processed_deal DROP CONSTRAINT last_processed_deal_pkey;
-ALTER TABLE last_processed_deal ADD PRIMARY KEY (eventid, sellerid);
+ALTER TABLE last_processed_deal ADD PRIMARY KEY (sellerid);
 
 ALTER TABLE deals ALTER sellerid TYPE BIGINT;
 

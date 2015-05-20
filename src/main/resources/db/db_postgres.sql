@@ -310,7 +310,7 @@ ALTER TABLE ONLY journals
 --
 
 ALTER TABLE ONLY last_processed_deal
-    ADD CONSTRAINT last_processed_deal_pkey PRIMARY KEY (eventid, sellerid);
+    ADD CONSTRAINT last_processed_deal_pkey PRIMARY KEY (sellerid);
 
 
 --

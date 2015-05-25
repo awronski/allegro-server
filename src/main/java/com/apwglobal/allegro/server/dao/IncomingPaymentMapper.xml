@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.apwglobal.allegro.server.dao.IncomingPaymentDao">
+
+    <select id="getLastIncomingPayments" parameterType="map" resultType="com.apwglobal.nice.domain.IncomingPayment">
+        SELECT *
+        FROM incoming_payments
+        WHERE sellerid = #{sellerId}
+        ORDER BY transactionid DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="checkIfIncomingPaymentNotExist" parameterType="long" resultType="boolean">
+        SELECT count(transactionid) = 0
+        FROM incoming_payments
+        WHERE transactionid = #{transactionid}
+    </select>
+
+    <insert id="saveIncomingPayment">
+        INSERT INTO incoming_payments
+        (transactionid, sellerid, buyerid, status, amount, receivedate, price,
+         postageamount, itemscounter, incomplete, maintransactionid)
+        VALUES
+            (#{transactionId}, #{sellerId}, #{buyerId}, #{status}, #{amount}, #{receiveDate}, #{price},
+             #{postageAmount}, #{itemsCounter}, #{incomplete}, #{mainTransactionId,jdbcType=BIGINT})
+    </insert>
+
+</mapper>

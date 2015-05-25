@@ -44,6 +44,7 @@ public class DbConfiguration {
                 getMapper(DealDao.class),
                 getMapper(PaymentDao.class),
                 getMapper(ClientDao.class),
+                getMapper(IncomingPaymentDao.class),
         };
     }
 

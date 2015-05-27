@@ -41,6 +41,11 @@ public class DealService implements IDealService {
     }
 
     @Override
+    public List<Deal> getDealsByBuyerId(long sellerId, long buyerId) {
+        return dealDao.getDealsByBuyerId(sellerId, buyerId);
+    }
+
+    @Override
     public void saveDeal(Deal deal) {
         dealDao.saveDeal(deal);
 

@@ -11,6 +11,7 @@ public interface IDealService {
     Optional<Long> findLastRowId(long sellerId);
     List<Deal> getLastDeals(long sellerId, int limit);
     List<Deal> getDealsAfterEventId(long sellerId, long eventId);
+    List<Deal> getDealsByBuyerId(long sellerId, long buyerId);
 
     void saveDeal(Deal deal);
     void updateLastProcessedDealEventId(Deal deal);

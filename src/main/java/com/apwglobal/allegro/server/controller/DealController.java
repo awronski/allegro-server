@@ -23,6 +23,12 @@ public class DealController implements JsonpControllerAdvice, ClientIdAwareContr
         return dealService.getLastDeals(getClientId(), limit);
     }
 
+    @RequestMapping("/deals/byBuyerId/{buyerId}")
+    @ResponseBody
+    public List<Deal> dealsByBuyerId(@PathVariable(value = "buyerId") long buyerId) {
+        return dealService.getDealsByBuyerId(getClientId(), buyerId);
+    }
+
     @RequestMapping("/deals/after/eventId/{eventId}")
     @ResponseBody
     public List<Deal> dealsAfterEventId(@PathVariable(value = "eventId") long eventId) {

@@ -12,6 +12,8 @@ public interface DealDao {
     Optional<Long> findLastRowId(long sellerId);
     List<Deal> getLastDeals(@Param("sellerId") long sellerId, @Param("limit") int limit);
     List<Deal> getDealsAfterEventId(@Param("sellerId") long sellerId, @Param("eventId") long eventId);
+    List<Deal> getDealsByBuyerId(@Param("sellerId") long sellerId, @Param("buyerId") long buyerId);
+
 
     void saveDeal(Deal deal);
 

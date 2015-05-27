@@ -27,6 +27,13 @@
         ORDER BY eventId ASC
     </select>
 
+    <select id="getDealsByBuyerId" parameterType="map" resultType="com.apwglobal.nice.domain.Deal">
+        SELECT *
+        FROM deals
+        WHERE sellerid = #{sellerId} AND buyerid = #{buyerId}
+        ORDER BY eventId ASC
+    </select>
+
     <insert id="saveDeal">
         INSERT INTO deals
         (eventid, dealtype, eventtime, dealId, transactionid, sellerid, itemid, buyerid, quantity)

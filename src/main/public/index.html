@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Allegro - server</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+        $(function () {
+            $("#showAuctionForm").submit(function (event) {
+                var v = $(".itemId").val();
+                window.location.href = "/auctions/" + v;
+                event.preventDefault();
+            });
+            $("#showDealsForm").submit(function (event) {
+                var v = $(".buyerId").val();
+                window.location.href = "/deals/byBuyerId/" + v;
+                event.preventDefault();
+            });
+        });
+    </script>
+</head>
+<body>
+
+
+<h1>Auctions</h1>
+
+<div><a href="/auctions?open=true">Open</a></div>
+<div><a href="/auctions?open=false">Closed</a></div>
+<div>
+    <form id="showAuctionForm">
+        <label>
+            <input class="itemId" type="text" name="itemId"/>
+            <input type="submit" value="Auction Id">
+        </label>
+    </form>
+</div>
+
+<h1>Deals</h1>
+
+<div><a href="/deals?limit=250">Last 250</a></div>
+<div>
+    <form id="showDealsForm">
+        <label>
+            <input class="buyerId" type="text" name="buyerId"/>
+            <input type="submit" value="Id Kupującego">
+        </label>
+    </form>
+</div>
+
+<h1>Incoming Payments</h1>
+
+<div><a href="/incoming-payments?limit=250">Last 250</a></div>
+<div><a href="/incoming-payments/surcharges">Surcharges</a></div>
+
+<h1>Orders</h1>
+
+<div><a href="/payments?limit=50">Last 50</a></div>
+<div><a href="/payments/unprocessed">Unprocessed</a></div>
+
+<h1>Journal</h1>
+
+<div><a href="/journals?limit=1000">Last 1000</a></div>
+
+</body>
+</html>

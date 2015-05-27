@@ -109,6 +109,10 @@
                     <include>**/*.xml</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>${basedir}/src/main/public</directory>
+                <targetPath>/public</targetPath>
+            </resource>
         </resources>
         <plugins>
             <plugin>

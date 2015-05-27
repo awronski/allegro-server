@@ -25,6 +25,11 @@ public class IncomingPaymentService implements IIncomingPaymentService {
     }
 
     @Override
+    public List<IncomingPayment> getIncomingPaymentsSurcharges(long sellerId, int limit) {
+        return incomingPaymentDao.getIncomingPaymentsSurcharges(sellerId, limit);
+    }
+
+    @Override
     public void createIfNotExist(IncomingPayment ip) {
         if (incomingPaymentDao.checkIfIncomingPaymentNotExist(ip.getTransactionId())) {
             incomingPaymentDao.saveIncomingPayment(ip);

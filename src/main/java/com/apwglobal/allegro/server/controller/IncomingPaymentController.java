@@ -22,4 +22,10 @@ public class IncomingPaymentController implements JsonpControllerAdvice, ClientI
         return incomingPaymentService.getLastIncomingPayments(getClientId(), limit);
     }
 
+    @RequestMapping("/incoming-payments/surcharges")
+    @ResponseBody
+    public List<IncomingPayment> incomingPaymentsSurcharges(@RequestParam(value = "limit", required = false, defaultValue = "100") int limit) {
+        return incomingPaymentService.getIncomingPaymentsSurcharges(getClientId(), limit);
+    }
+
 }

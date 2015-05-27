@@ -10,6 +10,14 @@
         LIMIT #{limit}
     </select>
 
+    <select id="getIncomingPaymentsSurcharges" parameterType="map" resultType="com.apwglobal.nice.domain.IncomingPayment">
+        SELECT *
+        FROM incoming_payments
+        WHERE sellerid = #{sellerId} AND maintransactionid IS NOT NULL
+        ORDER BY transactionid DESC
+        LIMIT #{limit}
+    </select>
+
     <select id="checkIfIncomingPaymentNotExist" parameterType="long" resultType="boolean">
         SELECT count(transactionid) = 0
         FROM incoming_payments

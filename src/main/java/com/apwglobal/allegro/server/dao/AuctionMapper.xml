@@ -7,7 +7,7 @@
         WHERE
             sellerid=#{sellerId}
         <if test="open.isPresent()">
-             AND open = #{open,jdbcType=BOOLEAN}
+             AND "open" = #{open,jdbcType=BOOLEAN}
         </if>
         ORDER BY id DESC
         <if test="limit.isPresent()">
@@ -37,7 +37,10 @@
           soldQuantity = #{soldQuantity},
               biddersCounter = #{biddersCounter},
               watchersCounter = #{watchersCounter},
-              viewsCounter = #{viewsCounter}
+              viewsCounter = #{viewsCounter},
+              price = #{price},
+              title = #{title},
+              "open" = #{open}
         WHERE id = #{id}
     </update>
 

@@ -36,6 +36,11 @@ public class AuctionService implements IAuctionService {
     }
 
     @Override
+    public List<AuctionField> getAuctionFieldsById(long sellerId, long itemId) {
+        return allegro.get(sellerId).getAuctionFields(itemId);
+    }
+
+    @Override
     public void saveAuction(Auction auction) {
         auctionDao.saveAuction(auction);
 
@@ -80,7 +85,13 @@ public class AuctionService implements IAuctionService {
         return newAuction;
     }
 
-    //TODO reopen auction if there was error at allegro
+    @Override
+    public ChangedAuctionInfo changeAuctionFields(long sellerId, long itemId, List<AuctionField> fields) {
+        ChangedAuctionInfo info = allegro.get(sellerId).changeAuctions(itemId, fields);
+        logger.debug("Changed: {}", info);
+
+        return info;
+    }
 
     @Override
     public void closeAuction(long sellerId, long itemId) {

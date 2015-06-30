@@ -29,6 +29,12 @@ public class AuctionController implements JsonpControllerAdvice, ClientIdAwareCo
         return auctionService.getAuctionById(getClientId(), itemId);
     }
 
+    @RequestMapping("/auctions/{itemId}/fields")
+    @ResponseBody
+    public List<AuctionField> auctionFieldsById(@PathVariable("itemId") long itemId) {
+        return auctionService.getAuctionFieldsById(getClientId(), itemId);
+    }
+
     @RequestMapping(value = "/auctions/{itemId}/changeQty", method = RequestMethod.PUT)
     @ResponseBody
     public ChangedQty changeQty(@PathVariable("itemId") long itemId, @RequestParam("newQty") int newQty) {
@@ -45,6 +51,12 @@ public class AuctionController implements JsonpControllerAdvice, ClientIdAwareCo
     @ResponseBody
     public CreatedAuction create(@RequestBody List<AuctionField> fields) {
         return auctionService.createNewAuction(getClientId(), fields);
+    }
+
+    @RequestMapping(value = "/auctions/{itemId}/change", method = RequestMethod.PUT)
+    @ResponseBody
+    public ChangedAuctionInfo change(@PathVariable("itemId") long itemId, @RequestBody List<AuctionField> fields) {
+        return auctionService.changeAuctionFields(getClientId(), itemId, fields);
     }
 
 }

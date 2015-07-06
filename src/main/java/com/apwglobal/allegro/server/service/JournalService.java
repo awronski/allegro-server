@@ -32,9 +32,35 @@ public class JournalService implements IJournalService {
     }
 
     @Override
+    public List<Journal> getJournalsAfterEventId(long sellerId, long lastEventId) {
+        return journalDao.getJournalsAfterEventId(sellerId, lastEventId);
+    }
+
+    @Override
     public void saveJournal(Journal journal) {
         journalDao.saveJournal(journal);
 
         logger.debug("Saved: {}", journal);
+    }
+
+
+    @Override
+    public long createLastProcessedJournalEventId(long sellerId) {
+        journalDao.createLastProcessedJournalEventId(sellerId);
+
+        logger.debug("Created Last processed journal event id for seller: {}", sellerId);
+        return 0l;
+    }
+
+    @Override
+    public Optional<Long> findLastProcessedJournalEventId(long sellerId) {
+        return journalDao.findLastProcessedJournalEventId(sellerId);
+    }
+
+    @Override
+    public void updateLastProcessedJournalEventId(Journal journal) {
+        journalDao.updateLastProcessedJournalEventId(journal);
+
+        logger.debug("Last processed journal: {}", journal);
     }
 }

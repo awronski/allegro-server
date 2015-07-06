@@ -14,6 +14,26 @@
         LIMIT #{limit}
     </select>
 
+    <select id="getJournalsAfterEventId" parameterType="map" resultType="com.apwglobal.nice.domain.Journal">
+        SELECT *
+        FROM journals
+        WHERE sellerid = #{sellerId} AND rowid > #{eventId}
+        ORDER BY rowid ASC
+    </select>
+
+    <select id="findLastProcessedJournalEventId" parameterType="long" resultType="java.util.Optional">
+        SELECT max(eventid) FROM last_processed_journal WHERE sellerid = #{sellerId}
+    </select>
+
+    <update id="updateLastProcessedJournalEventId" parameterType="com.apwglobal.nice.domain.Journal">
+        UPDATE last_processed_journal SET eventid = #{rowId} WHERE sellerid = #{sellerId}
+    </update>
+
+    <insert id="createLastProcessedJournalEventId" parameterType="long">
+        INSERT INTO last_processed_journal (eventid, sellerid)
+        VALUES (0, #{sellerId})
+    </insert>
+
     <insert id="saveJournal">
         INSERT INTO journals
             (rowid, itemid, sellerId, changetype, changedate, currentprice)

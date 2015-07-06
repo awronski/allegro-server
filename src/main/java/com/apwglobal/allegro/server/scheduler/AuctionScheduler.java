@@ -2,7 +2,9 @@ package com.apwglobal.allegro.server.scheduler;
 
 import com.apwglobal.allegro.server.service.IAllegroClientFactory;
 import com.apwglobal.allegro.server.service.IAuctionService;
+import com.apwglobal.allegro.server.service.IJournalService;
 import com.apwglobal.nice.domain.Auction;
+import com.apwglobal.nice.domain.Journal;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,13 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.Comparator.comparingLong;
 
 @Service
 public class AuctionScheduler {
@@ -29,72 +29,86 @@ public class AuctionScheduler {
     @Autowired
     private IAuctionService auctionService;
 
+    @Autowired
+    private IJournalService journalService;
+
     @Scheduled(fixedDelay=11 * 60000)
     @Transactional
     public void syncAuctions() {
         logger.debug("Starting syncAuctions");
-        doAuctions(
-                a -> !exists(a),
-                auctionService::saveAuction);
+        allegro
+                .getAll()
+                .forEach(this::syncAuctions);
     }
 
-    @Scheduled(fixedDelay=9 * 60000)
-    @Transactional
-    public void updateAuctions() {
-        logger.debug("Starting updateAuctions");
-        doAuctions(
-                this::exists,
-                auctionService::updateAuction);
+    private void syncAuctions(IAllegroNiceApi client) {
+        Long lastEventId = getLastEventId(client);
+        List<Journal> journals = journalService.getJournalsAfterEventId(client.getClientId(), lastEventId);
+        if (journals.isEmpty()) {
+            return;
+        }
+        logger.debug("Journals events to process {} for seller {}", journals.size(), client.getClientId());
+
+        client.login();
+        journals
+                .stream()
+                .forEach(j -> processJournal(client, j));
+
+        updateLastProcessedJournalEventId(journals);
+    }
+
+    private long getLastEventId(IAllegroNiceApi client) {
+        Optional<Long> eventId = journalService.findLastProcessedJournalEventId(client.getClientId());
+        long lastEventId;
+        if (eventId.isPresent()) {
+            lastEventId = eventId.get();
+        } else {
+            lastEventId = journalService.createLastProcessedJournalEventId(client.getClientId());
+        }
+        return lastEventId;
+    }
+
+    private void processJournal(IAllegroNiceApi client, Journal journal) {
+        switch (journal.getChangeType()) {
+            case CHANGE:
+                updateAuction(client, journal);
+                break;
+            case START:
+                saveAuction(client, journal);
+                break;
+            case END:
+                endAuction(client, journal);
+                break;
+        }
+    }
+
+    private void endAuction(IAllegroNiceApi client, Journal journal) {
+        auctionService.closeAuction(client.getClientId(), journal.getItemId());
+    }
+
+    private void saveAuction(IAllegroNiceApi client, Journal journal) {
+        client.getAuctionById(journal.getItemId())
+                .filter(a -> !exists(a))
+                .ifPresent(auctionService::saveAuction);
+    }
+
+    private void updateAuction(IAllegroNiceApi client, Journal journal) {
+        client.getAuctionById(journal.getItemId())
+                .filter(this::exists)
+                .ifPresent(auctionService::updateAuction);
+    }
+
+    private void updateLastProcessedJournalEventId(List<Journal> journals) {
+        journalService.updateLastProcessedJournalEventId(
+                journals
+                        .stream()
+                        .max(comparingLong(Journal::getRowId))
+                        .get()
+        );
     }
 
     private boolean exists(Auction a) {
         return auctionService.getAuctionById(a.getSellerId(), a.getId()).isPresent();
-    }
-
-    private void doAuctions(Func1<Auction, Boolean> predicate, Action1<Auction> consumer) {
-        allegro
-                .getAll()
-                .stream()
-                .forEach(c -> c.login()
-                        .getAuctions()
-                        .filter(predicate)
-                        .forEach(consumer));
-    }
-
-
-
-    @Scheduled(fixedDelay=13 * 60000)
-    @Transactional
-    public void closeAuctions() {
-        logger.debug("Starting closeAuctions");
-        allegro
-                .getAll()
-                .forEach(this::closeAuctionsForGivenClient);
-    }
-
-    private void closeAuctionsForGivenClient(IAllegroNiceApi client) {
-        List<Long> inDb = auctionService.getAuctions(client.getClientId(), Optional.of(true), Optional.empty())
-                .stream()
-                .map(Auction::getId)
-                .collect(toList());
-
-        if (inDb.isEmpty()) {
-            return;
-        }
-
-        //TODO what to do if auction is open but allegro did not refreshed list yet?
-        List<Long> inAllegro = client
-                .login()
-                .getAuctions()
-                .map(Auction::getId)
-                .toList()
-                .toBlocking()
-                .single();
-
-        inDb
-                .stream()
-                .filter(a -> !inAllegro.contains(a))
-                .forEach(a -> auctionService.closeAuction(client.getClientId(), a));
     }
 
 }

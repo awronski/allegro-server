@@ -10,7 +10,12 @@ public interface JournalDao {
 
     Optional<Long> findLastRowId(long sellerId);
     List<Journal> getLastJournals(@Param("sellerId") long sellerId, @Param("limit") int limit);
+    List<Journal> getJournalsAfterEventId(@Param("sellerId") long sellerId, @Param("eventId") long eventId);
 
     void saveJournal(Journal journal);
+
+    void createLastProcessedJournalEventId(long sellerId);
+    void updateLastProcessedJournalEventId(Journal journal);
+    Optional<Long> findLastProcessedJournalEventId(long sellerId);
 
 }

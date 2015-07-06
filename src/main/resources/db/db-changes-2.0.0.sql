@@ -48,3 +48,10 @@ CREATE TABLE incoming_payments (
 );
 ALTER TABLE incoming_payments OWNER TO alle;
 
+
+CREATE TABLE last_processed_journal (
+  eventid bigint NOT NULL,
+  sellerid bigint NOT NULL,
+  CONSTRAINT last_processed_journal_pkey PRIMARY KEY (sellerid)
+);
+ALTER TABLE last_processed_journal OWNER TO alle;

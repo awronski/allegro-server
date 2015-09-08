@@ -111,7 +111,7 @@
             </resource>
             <resource>
                 <directory>${basedir}/src/main/public</directory>
-                <targetPath>/public</targetPath>
+                <targetPath>${project.build.directory}/classes/public</targetPath>
             </resource>
         </resources>
         <plugins>

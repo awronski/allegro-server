@@ -51,7 +51,7 @@ public class AuctionService implements IAuctionService {
     public void updateAuction(Auction auction) {
         auctionDao.updateAuction(auction);
 
-        logger.debug("Updated: {}", auction);
+        logger.trace("Updated: {}", auction);
     }
 
     @Override

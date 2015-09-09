@@ -64,15 +64,16 @@ public class PaymentService implements IPaymentService {
         Payment payment = paymentDao.getPaymentById(sellerId, transactionId);
         check(payment, transactionId, amount);
 
-        PaymentProcessed processed = paymentDao.findPaymentProcessed(transactionId);
+        PaymentProcessed processed = paymentDao.findPaymentProcessed(transactionId, sellerId);
         if (processed == null) {
             processed = new PaymentProcessed.Builder()
                     .transactionId(transactionId)
+                    .sellerId(sellerId)
                     .date(new Date())
                     .ref(ref)
                     .build();
             paymentDao.savePaymentProcessed(processed);
-            paymentDao.updatePaymentAsProcessed(payment.getTransactionId());
+            paymentDao.updatePaymentAsProcessed(payment.getTransactionId(), sellerId);
             logger.debug("Saved: {}", processed);
         }
         return processed;

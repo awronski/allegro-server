@@ -27,6 +27,7 @@
 
         i.id            AS item_id,
         i.transactionid AS item_transactionid,
+        i.sellerId      AS item_sellerid,
         i.title         AS item_title,
         i.price         AS item_price,
         i.quantity      AS item_quantity,
@@ -37,7 +38,7 @@
         FROM payments p
         INNER JOIN addresses r ON p.receiver_id = r.id
         INNER JOIN addresses o ON p.orderer_id = o.id
-        INNER JOIN items i ON p.transactionid = i.transactionid
+        INNER JOIN items i ON p.transactionid = i.transactionid AND p.sellerid = i.sellerid
     </sql>
 
     <select id="getPaymentById" parameterType="map" resultMap="paymentsMap">
@@ -49,7 +50,7 @@
     <select id="getLastPayments" parameterType="map" resultMap="paymentsMap">
         SELECT <include refid="paymentColumns"/>
         <include refid="paymentFromJoins"/>
-        WHERE sellerid = #{sellerId}
+        WHERE p.sellerid = #{sellerId}
         ORDER BY p.date DESC
         LIMIT #{limit}
     </select>
@@ -57,7 +58,7 @@
         SELECT <include refid="paymentColumns"/>
         <include refid="paymentFromJoins"/>
         WHERE
-            sellerId = #{sellerId}
+            p.sellerId = #{sellerId}
             <if test="from.isPresent()">
                 AND "date" &gt;= #{from,jdbcType=TIMESTAMP}
             </if>
@@ -74,17 +75,18 @@
         ORDER BY p.date DESC
     </select>
 
-    <update id="updatePaymentAsProcessed" parameterType="long">
-        UPDATE payments set processed = true WHERE transactionId = #{transactionId}
+    <update id="updatePaymentAsProcessed" parameterType="map">
+        UPDATE payments set processed = true WHERE transactionId = #{transactionId} AND sellerid = #{sellerId}
     </update>
 
-    <select id="findPaymentProcessed" parameterType="long" resultType="com.apwglobal.nice.domain.PaymentProcessed">
-      SELECT * FROM payments_processed WHERE transactionid = #{transactionId}
+    <select id="findPaymentProcessed" parameterType="map" resultType="com.apwglobal.nice.domain.PaymentProcessed">
+        SELECT * FROM payments_processed WHERE transactionid = #{transactionId} AND sellerid = #{sellerId}
     </select>
 
     <resultMap id="paymentsMap" type="com.apwglobal.nice.domain.Payment">
         <id property="transactionId" column="transactionId"/>
-        <result property="sellerId" column="sellerId"/>
+        <id property="sellerId" column="sellerId"/>
+
         <result property="buyerId" column="buyerId"/>
         <result property="email" column="email"/>
         <result property="date" column="date"/>
@@ -101,12 +103,13 @@
                      resultMap="addressMap" columnPrefix="r_"/>
         <association property="orderer" column="orderer_id" foreignColumn="id" fetchType="eager"
                      resultMap="addressMap" columnPrefix="o_"/>
-        <collection property="items" foreignColumn="transactionid" fetchType="eager"
+        <collection property="items" foreignColumn="transactionid,sellerid" fetchType="eager"
                     columnPrefix="item_" resultMap="itemsMap"/>
     </resultMap>
     <resultMap id="itemsMap" type="com.apwglobal.nice.domain.Item">
         <id property="id" column="id"/>
         <id property="transactionId" column="transactionId"/>
+        <result property="sellerId" column="sellerid"/>
         <result property="title" column="title"/>
         <result property="price" column="price"/>
         <result property="quantity" column="quantity"/>
@@ -142,12 +145,12 @@
     </insert>
     <insert id="saveItem">
         INSERT INTO items
-        (id, transactionid, title, price, quantity, amount)
-        VALUES (#{id}, #{transactionId}, #{title}, #{price}, #{quantity}, #{amount})
+        (id, transactionid, sellerid, title, price, quantity, amount)
+        VALUES (#{id}, #{transactionId}, #{sellerId}, #{title}, #{price}, #{quantity}, #{amount})
     </insert>
     <insert id="savePaymentProcessed">
         INSERT INTO payments_processed
-        (transactionid, date, ref) VALUES (#{transactionId}, #{date}, #{ref})
+        (transactionid, sellerid, date, ref) VALUES (#{transactionId}, #{sellerId}, #{date}, #{ref})
     </insert>
 
     <select id="wasItemPaid" parameterType="map" resultType="boolean">

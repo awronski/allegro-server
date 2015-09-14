@@ -15,4 +15,8 @@ ALTER TABLE payments ADD PRIMARY KEY (transactionid, sellerid);
 ALTER TABLE items ADD CONSTRAINT payments_transactionid_sellerid FOREIGN KEY (transactionid, sellerid) REFERENCES payments(transactionid, sellerid);
 ALTER TABLE payments_processed ADD CONSTRAINT payments_transactionid_sellerid FOREIGN KEY (transactionid, sellerid) REFERENCES payments(transactionid, sellerid);
 
+ALTER TABLE payments_processed DROP CONSTRAINT payments_processed_pkey;
+ALTER TABLE payments_processed ADD PRIMARY KEY (transactionid, sellerid);
 
+ALTER TABLE incoming_payments DROP CONSTRAINT incoming_payments_pkey;
+ALTER TABLE incoming_payments ADD PRIMARY KEY (transactionid, sellerid);

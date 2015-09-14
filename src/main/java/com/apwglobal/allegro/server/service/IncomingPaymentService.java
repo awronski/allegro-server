@@ -31,7 +31,7 @@ public class IncomingPaymentService implements IIncomingPaymentService {
 
     @Override
     public void createIfNotExist(IncomingPayment ip) {
-        if (incomingPaymentDao.checkIfIncomingPaymentNotExist(ip.getTransactionId())) {
+        if (incomingPaymentDao.checkIfIncomingPaymentNotExist(ip.getSellerId(), ip.getTransactionId())) {
             incomingPaymentDao.saveIncomingPayment(ip);
             logger.debug("Saved: {}", ip);
         }

@@ -18,10 +18,10 @@
         LIMIT #{limit}
     </select>
 
-    <select id="checkIfIncomingPaymentNotExist" parameterType="long" resultType="boolean">
+    <select id="checkIfIncomingPaymentNotExist" parameterType="map" resultType="boolean">
         SELECT count(transactionid) = 0
         FROM incoming_payments
-        WHERE transactionid = #{transactionid}
+        WHERE transactionid = #{transactionId} AND sellerid = #{sellerId}
     </select>
 
     <insert id="saveIncomingPayment">

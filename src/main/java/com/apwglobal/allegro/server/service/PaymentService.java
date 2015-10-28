@@ -37,6 +37,7 @@ public class PaymentService implements IPaymentService {
     @Override
     @Transactional
     public void savePayment(Payment f) {
+        logger.debug("Saving: {}", f);
         saveAddresses(f);
         paymentDao.savePayment(f);
         saveItems(f);

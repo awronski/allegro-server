@@ -3,6 +3,7 @@ package com.apwglobal.allegro.server.scheduler;
 import com.apwglobal.allegro.server.service.IAllegroClientFactory;
 import com.apwglobal.allegro.server.service.IDealService;
 import com.apwglobal.allegro.server.service.IPaymentService;
+import com.apwglobal.allegro.server.util.DealsFillter;
 import com.apwglobal.nice.domain.Deal;
 import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.slf4j.Logger;
@@ -45,6 +46,8 @@ public class PaymentScheduler {
         long lastEventId = getLastEventId(client);
 
         List<Deal> deals = dealService.getDealsAfterEventId(client.getClientId(), lastEventId);
+        deals = DealsFillter.skipLastDeals(deals, 5);   //do not process deals from last 5 minutes because they can be incomplete
+
         if (deals.isEmpty()) {
             return;
         }

@@ -46,7 +46,7 @@ public class PaymentScheduler {
         long lastEventId = getLastEventId(client);
 
         List<Deal> deals = dealService.getDealsAfterEventId(client.getClientId(), lastEventId);
-        deals = DealsFillter.skipLastDeals(deals, 5);   //do not process deals from last 5 minutes because they can be incomplete
+        deals = DealsFillter.skipLastDeals(deals, 10);   //do not process deals from last 10 minutes because they can be incomplete
 
         if (deals.isEmpty()) {
             return;

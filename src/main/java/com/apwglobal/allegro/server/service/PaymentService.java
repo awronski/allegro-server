@@ -37,6 +37,15 @@ public class PaymentService implements IPaymentService {
     @Override
     @Transactional
     public void savePayment(Payment f) {
+        Payment paymentById = paymentDao.getPaymentById(f.getSellerId(), f.getTransactionId());
+        if (paymentById != null) {
+            logger.error("Payment already exists. Cannot save again {}", paymentById);
+        } else {
+            savePaymentData(f);
+        }
+    }
+
+    private void savePaymentData(Payment f) {
         logger.debug("Saving: {}", f);
         saveAddresses(f);
         paymentDao.savePayment(f);

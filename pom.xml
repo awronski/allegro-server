@@ -6,7 +6,7 @@
 
     <groupId>com.apwglobal</groupId>
     <artifactId>allegro-server</artifactId>
-    <version>2.3.0-SNAPSHOT</version>
+    <version>2.4.0-SNAPSHOT</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -80,13 +80,13 @@
         <dependency>
             <groupId>com.apwglobal</groupId>
             <artifactId>allegro-nice-api</artifactId>
-            <version>2.3.0-SNAPSHOT</version>
+            <version>2.4.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.apwglobal</groupId>
             <artifactId>allegro-nice-domain</artifactId>
-            <version>2.3.0-SNAPSHOT</version>
+            <version>2.4.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>

@@ -6,7 +6,8 @@ You can access the data with any rest client or use our [allegro-client](https:/
 java library
 
 # What's new?
-Version 2.0 support multi users.
+- Version 2.4 supports changing of price for the ongoing auctions even with offers
+- Version 2.0 support multi users.
 
 # What does it do?
 It synchronize data with allegro including:

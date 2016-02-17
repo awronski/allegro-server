@@ -7,6 +7,7 @@ java library
 
 # What's new?
 - Version 2.4 supports changing of price for the ongoing auctions even with offers
+- Version 2.1 supports single payment for multiple sellers
 - Version 2.0 support multi users.
 
 # What does it do?

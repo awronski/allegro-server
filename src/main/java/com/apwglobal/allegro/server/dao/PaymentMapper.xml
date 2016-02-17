@@ -25,7 +25,8 @@
         o.phone         AS o_phone,
         o.nip           AS o_nip,
 
-        i.id            AS item_id,
+        i.formid        AS item_formid,
+        i.formdealid    AS item_formdealid,
         i.transactionid AS item_transactionid,
         i.sellerId      AS item_sellerid,
         i.title         AS item_title,
@@ -107,8 +108,9 @@
                     columnPrefix="item_" resultMap="itemsMap"/>
     </resultMap>
     <resultMap id="itemsMap" type="com.apwglobal.nice.domain.Item">
-        <id property="id" column="id"/>
+        <id property="formId" column="formid"/>
         <id property="transactionId" column="transactionId"/>
+        <id property="formDealId" column="formdealid"/>
         <result property="sellerId" column="sellerid"/>
         <result property="title" column="title"/>
         <result property="price" column="price"/>
@@ -145,8 +147,8 @@
     </insert>
     <insert id="saveItem">
         INSERT INTO items
-        (id, transactionid, sellerid, title, price, quantity, amount)
-        VALUES (#{id}, #{transactionId}, #{sellerId}, #{title}, #{price}, #{quantity}, #{amount})
+        (formid, formdealid, transactionid, sellerid, title, price, quantity, amount)
+        VALUES (#{formId}, #{formDealId}, #{transactionId}, #{sellerId}, #{title}, #{price}, #{quantity}, #{amount})
     </insert>
     <insert id="savePaymentProcessed">
         INSERT INTO payments_processed

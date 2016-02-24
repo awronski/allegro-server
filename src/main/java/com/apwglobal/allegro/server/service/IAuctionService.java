@@ -14,6 +14,7 @@ public interface IAuctionService {
     void updateAuction(Auction auction);
 
     ChangedQty changeQty(long sellerId, long itemId, int newQty);
+    ChangedPrice changePrice(long sellerId, long itemId, double newPrice);
     List<FinishAuctionFailure> finishAuctions(long sellerId, List<Long> itemsIds);
     CreatedAuction createNewAuction(long sellerId, List<AuctionField> fields);
     ChangedAuctionInfo changeAuctionFields(long sellerId, long itemId, List<AuctionField> fields);

@@ -69,6 +69,20 @@ public class AuctionService implements IAuctionService {
     }
 
     @Override
+    public ChangedPrice changePrice(long sellerId, long itemId, double newPrice) {
+        if (!getAuctionById(sellerId, itemId).isPresent()) {
+            throw new ResourceNotFoundException();
+        }
+
+        ChangedPrice changedPrice = allegro.get(sellerId).changePrice(itemId, newPrice);
+        logger.debug("Changed price: {}, {}", newPrice, changedPrice.getInfo());
+
+        //TODO update auction in db
+
+        return changedPrice;
+    }
+
+    @Override
     public List<FinishAuctionFailure> finishAuctions(long sellerId, List<Long> itemsIds) {
         logger.debug("Finishing auctions: {}", itemsIds);
         List<FinishAuctionFailure> failures = allegro.get(sellerId).finishAuctions(itemsIds);

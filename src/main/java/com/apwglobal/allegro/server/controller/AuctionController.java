@@ -41,6 +41,12 @@ public class AuctionController implements JsonpControllerAdvice, ClientIdAwareCo
         return auctionService.changeQty(getClientId(), itemId, newQty);
     }
 
+    @RequestMapping(value = "/auctions/{itemId}/changePrice", method = RequestMethod.PUT)
+    @ResponseBody
+    public ChangedPrice changePrice(@PathVariable("itemId") long itemId, @RequestParam("newPrice") double newPrice) {
+        return auctionService.changePrice(getClientId(), itemId, newPrice);
+    }
+
     @RequestMapping(value = "/auctions/finish", method = RequestMethod.PUT)
     @ResponseBody
     public List<FinishAuctionFailure> finish(@RequestParam("itemsIds") List<Long> itemsIds) {

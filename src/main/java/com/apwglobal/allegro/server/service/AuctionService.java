@@ -26,8 +26,8 @@ public class AuctionService implements IAuctionService {
 
 
     @Override
-    public List<Auction> getAuctions(long sellerId, Optional<Boolean> open, Optional<Integer> limit) {
-        return auctionDao.getAuctions(sellerId, open, limit);
+    public List<Auction> getAuctions(long sellerId, Optional<Boolean> open, Optional<Boolean> withSale, Optional<Integer> limit) {
+        return auctionDao.getAuctions(sellerId, open, withSale, limit);
     }
 
     @Override

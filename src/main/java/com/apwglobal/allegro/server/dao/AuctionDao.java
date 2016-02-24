@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface AuctionDao {
 
-    List<Auction> getAuctions(@Param("sellerId") long sellerId, @Param("open") Optional<Boolean> open, @Param("limit") Optional<Integer> limit);
+    List<Auction> getAuctions(@Param("sellerId") long sellerId, @Param("open") Optional<Boolean> open, @Param("withSale") Optional<Boolean> withSale, @Param("limit") Optional<Integer> limit);
     Auction getAuctionById(@Param("sellerId") long sellerId, @Param("itemId") long itemId);
 
     void saveAuction(Auction auction);

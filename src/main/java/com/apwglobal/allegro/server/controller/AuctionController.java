@@ -19,8 +19,9 @@ public class AuctionController implements JsonpControllerAdvice, ClientIdAwareCo
     @ResponseBody
     public List<Auction> auctions(
             @RequestParam(value = "open", required = false) Optional<Boolean> open,
+            @RequestParam(value = "withSale", required = false) Optional<Boolean> withSale,
             @RequestParam(value = "limit", required = false) Optional<Integer> limit) {
-        return auctionService.getAuctions(getClientId(), open, limit);
+        return auctionService.getAuctions(getClientId(), open, withSale, limit);
     }
 
     @RequestMapping("/auctions/{itemId}")

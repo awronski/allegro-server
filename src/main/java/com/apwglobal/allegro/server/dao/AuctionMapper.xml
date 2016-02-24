@@ -9,6 +9,12 @@
         <if test="open.isPresent()">
              AND "open" = #{open,jdbcType=BOOLEAN}
         </if>
+        <if test="withSale.isPresent() and withSale.get() == true">
+            AND "soldquantity" > 0
+        </if>
+        <if test="withSale.isPresent() and withSale.get() == false">
+            AND "soldquantity" = 0
+        </if>
         ORDER BY id DESC
         <if test="limit.isPresent()">
             limit #{limit,jdbcType=INTEGER}

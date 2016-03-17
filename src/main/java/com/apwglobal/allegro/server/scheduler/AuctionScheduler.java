@@ -89,7 +89,10 @@ public class AuctionScheduler {
     private void saveAuction(IAllegroNiceApi client, Journal journal) {
         client.getAuctionById(journal.getItemId())
                 .filter(a -> !exists(a))
-                .ifPresent(auctionService::saveAuction);
+                .ifPresent(a -> {
+                    auctionService.saveAuction(a);
+                    auctionService.updateAuctionExtraOptions(a.getSellerId(), a.getId());
+                });
     }
 
     private void updateAuction(IAllegroNiceApi client, Journal journal) {

@@ -66,7 +66,7 @@ public class AuctionService implements IAuctionService {
 
         extraOptions.ifPresent(f -> {
             auctionDao.updateAuctionExtraOptions(itemId, (int) f.getValue());
-            logger.trace("Updated extraOptions of {} to {}", itemId, extraOptions.get().getValue());
+            logger.debug("Updated extraOptions of {} to {}", itemId, extraOptions.get().getValue());
         });
 
         return extraOptions.map(f -> true).orElse(false);

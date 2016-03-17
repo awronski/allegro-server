@@ -39,7 +39,7 @@ public class AuctionService implements IAuctionService {
 
     @Override
     public List<AuctionField> getAuctionFieldsById(long sellerId, long itemId) {
-        return allegro.get(sellerId).getAuctionFields(itemId);
+        return allegro.get(sellerId).loginIfNeeded().getAuctionFields(itemId);
     }
 
     @Override

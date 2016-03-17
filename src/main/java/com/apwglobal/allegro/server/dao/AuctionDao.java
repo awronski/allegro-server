@@ -13,6 +13,7 @@ public interface AuctionDao {
 
     void saveAuction(Auction auction);
     void updateAuction(Auction auction);
+    void updateAuctionExtraOptions(@Param("itemId") long itemId, @Param("extraOptions") int extraOptions);
     void closeAuction(@Param("sellerId") long sellerId, @Param("itemId") long itemId);
 
 }

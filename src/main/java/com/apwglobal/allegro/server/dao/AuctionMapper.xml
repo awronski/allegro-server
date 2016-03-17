@@ -29,11 +29,11 @@
         INSERT INTO auctions
         (id, sellerId, title, thumbnailUrl, startQuantity, soldQuantity, quantityType, startTime,
          endTime, biddersCounter, categoryId, watchersCounter, viewsCounter,
-         note, special, shop, payu, price, priceType, "open")
+         note, special, shop, payu, price, priceType, "open", extraOptions)
         VALUES (
             #{id}, #{sellerId}, #{title}, #{thumbnailUrl}, #{startQuantity}, #{soldQuantity}, #{quantityType}, #{startTime},
             #{endTime,jdbcType=TIMESTAMP}, #{biddersCounter}, #{categoryId}, #{watchersCounter}, #{viewsCounter},
-            #{note}, #{special}, #{shop}, #{payu}, #{price}, #{priceType}, #{open}
+            #{note}, #{special}, #{shop}, #{payu}, #{price}, #{priceType}, #{open}, #{extraOptions}
         )
     </insert>
 
@@ -48,6 +48,10 @@
               title = #{title},
               "open" = #{open}
         WHERE id = #{id}
+    </update>
+
+    <update id="updateAuctionExtraOptions" parameterType="map">
+        UPDATE auctions SET extraOptions = #{extraOptions} WHERE id = #{itemId}
     </update>
 
     <update id="closeAuction" parameterType="map">

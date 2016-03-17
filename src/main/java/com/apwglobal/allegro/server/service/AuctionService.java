@@ -18,6 +18,8 @@ public class AuctionService implements IAuctionService {
 
     private final static Logger logger = LoggerFactory.getLogger(AuctionService.class);
 
+    private boolean updateAuctionsExtraOptions = false;
+
     @Autowired
     private AuctionDao auctionDao;
 
@@ -52,6 +54,22 @@ public class AuctionService implements IAuctionService {
         auctionDao.updateAuction(auction);
 
         logger.trace("Updated: {}", auction);
+    }
+
+    @Override
+    public boolean updateAuctionExtraOptions(long sellerId, long itemId) {
+        List<AuctionField> auctionFieldsById = getAuctionFieldsById(sellerId, itemId);
+        Optional<AuctionField> extraOptions = auctionFieldsById
+                .stream()
+                .filter(f -> f.getId() == FieldId.EXTRA_OPTIONS.getId())
+                .findAny();
+
+        extraOptions.ifPresent(f -> {
+            auctionDao.updateAuctionExtraOptions(itemId, (int) f.getValue());
+            logger.trace("Updated extraOptions of {} to {}", itemId, extraOptions.get().getValue());
+        });
+
+        return extraOptions.map(f -> true).orElse(false);
     }
 
     @Override

@@ -12,6 +12,7 @@ public interface IAuctionService {
     List<AuctionField> getAuctionFieldsById(long sellerId, long itemId);
     void saveAuction(Auction auction);
     void updateAuction(Auction auction);
+    boolean updateAuctionExtraOptions(long sellerId, long itemId);
 
     ChangedQty changeQty(long sellerId, long itemId, int newQty);
     ChangedPrice changePrice(long sellerId, long itemId, double newPrice);

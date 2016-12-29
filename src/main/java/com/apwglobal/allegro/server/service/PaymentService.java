@@ -3,6 +3,7 @@ package com.apwglobal.allegro.server.service;
 import com.apwglobal.allegro.server.dao.PaymentDao;
 import com.apwglobal.nice.domain.Payment;
 import com.apwglobal.nice.domain.PaymentProcessed;
+import com.apwglobal.nice.exception.UnknownAllegroException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,9 +63,7 @@ public class PaymentService implements IPaymentService {
     }
 
     private void saveItems(Payment p) {
-        p.getItems()
-                .stream()
-                .forEach(paymentDao::saveItem);
+        p.getItems().forEach(paymentDao::saveItem);
     }
 
 
@@ -90,10 +89,11 @@ public class PaymentService implements IPaymentService {
     }
 
     private void check(Payment p, long transactionId, double amount) {
-        //TODO add better exception handling
-        if (p == null || p.getTransactionId() != transactionId || p.getAmount() != amount) {
-            throw new IllegalArgumentException(
-                    String.format("Payment: %s, transactionId: %s, amount: %s", p, transactionId, amount));
+        if (p == null || p.getTransactionId() != transactionId) {
+            throw new UnknownAllegroException(String.format("Payment: %s, transactionId: %s, amount: %s", p, transactionId, amount));
+
+        } else if (p.getAmount() != amount) {
+            logger.warn("Amount is incorrect for transaction {}, is {}, got {}", transactionId, p.getAmount(), amount);
         }
     }
 

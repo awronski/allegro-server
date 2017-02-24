@@ -67,13 +67,7 @@ public class PaymentScheduler {
 
     private long getLastEventId(IAllegroNiceApi client) {
         Optional<Long> eventId = dealService.findLastProcessedDealEventId(client.getClientId());
-        long lastEventId;
-        if (eventId.isPresent()) {
-            lastEventId = eventId.get();
-        } else {
-            lastEventId = dealService.createLastProcessedDealEventId(client.getClientId());
-        }
-        return lastEventId;
+        return eventId.orElseGet(() -> dealService.createLastProcessedDealEventId(client.getClientId()));
     }
 
 }

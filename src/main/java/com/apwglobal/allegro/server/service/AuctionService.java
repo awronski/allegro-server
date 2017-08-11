@@ -2,7 +2,9 @@ package com.apwglobal.allegro.server.service;
 
 import com.apwglobal.allegro.server.dao.AuctionDao;
 import com.apwglobal.allegro.server.exception.ResourceNotFoundException;
+import com.apwglobal.allegro.server.exception.UnauthorizedException;
 import com.apwglobal.nice.domain.*;
+import com.apwglobal.nice.service.IAllegroNiceApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,11 +90,17 @@ public class AuctionService implements IAuctionService {
 
     @Override
     public ChangedPrice changePrice(long sellerId, long itemId, double newPrice) {
+        IAllegroNiceApi client = allegro.get(sellerId);
+
+        if (client.getRestApiSession() == null) {
+            throw new UnauthorizedException();
+        }
+
         if (!getAuctionById(sellerId, itemId).isPresent()) {
             throw new ResourceNotFoundException();
         }
 
-        ChangedPrice changedPrice = allegro.get(sellerId).changePrice(itemId, newPrice);
+        ChangedPrice changedPrice = client.changePrice(itemId, newPrice);
         logger.debug("Changed price: {}, {}", newPrice, changedPrice.getInfo());
 
         //TODO update auction in db

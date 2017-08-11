@@ -6,6 +6,7 @@ import com.apwglobal.allegro.server.security.Client;
 import com.apwglobal.nice.login.Credentials;
 import com.apwglobal.nice.service.AllegroNiceApi;
 import com.apwglobal.nice.service.IAllegroNiceApi;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +49,26 @@ public class AllegroClientFactory implements IAllegroClientFactory {
     private AllegroNiceApi createClient(Client client) {
         logger.debug("Creating allegro client: {}", client.getUsername());
         com.apwglobal.nice.service.Configuration conf = new com.apwglobal.nice.service.Configuration(prop.getCountry());
-        Credentials cred = new Credentials(client.getClientId(), client.getUsername(), client.getPassword(), client.getKey());
+        Credentials cred = getCredentials(client);
         return new AllegroNiceApi.Builder()
                 .conf(conf)
                 .cred(cred)
                 .test(prop.isSandbox())
                 .build();
+    }
+
+    @NotNull
+    private Credentials getCredentials(Client client) {
+        return new Credentials(
+                client.getClientId(),
+                client.getUsername(),
+                client.getPassword(),
+                client.getKey(),
+                client.getRestClientId(),
+                client.getRestClientSecret(),
+                client.getRestClientApiKey(),
+                client.getRestRedirectUri()
+        );
     }
 
 

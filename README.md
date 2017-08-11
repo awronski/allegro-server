@@ -6,6 +6,7 @@ You can access the data with any rest client or use our [allegro-client](https:/
 java library
 
 # What's new?
+- Version 3.0 support **Allegro Rest Api**
 - Version 2.4 supports changing of price for the ongoing auctions even with offers
 - Version 2.2 - 2.3 improvements and bug fixes
 - Version 2.1 supports single payment for multiple sellers

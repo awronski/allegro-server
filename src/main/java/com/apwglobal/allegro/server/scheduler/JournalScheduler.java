@@ -37,7 +37,7 @@ public class JournalScheduler {
 
         client
                 .login()
-                .getJournal(lastRawId.orElse(0l))
+                .getJournal(lastRawId.orElse(0L))
                 .forEach(journalService::saveJournal);
     }
 

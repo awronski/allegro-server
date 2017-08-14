@@ -71,7 +71,7 @@ public class AuctionService implements IAuctionService {
             logger.debug("Updated extraOptions of {} to {}", itemId, extraOptions.get().getValue());
         });
 
-        return extraOptions.map(f -> true).orElse(false);
+        return extraOptions.isPresent();
     }
 
     @Override

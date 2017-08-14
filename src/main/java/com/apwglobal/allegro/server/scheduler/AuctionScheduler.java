@@ -50,9 +50,7 @@ public class AuctionScheduler {
         logger.debug("Journals events to process {} for seller {}", journals.size(), client.getClientId());
 
         client.login();
-        journals
-                .stream()
-                .forEach(j -> processJournal(client, j));
+        journals.forEach(j -> processJournal(client, j));
 
         updateLastProcessedJournalEventId(journals);
     }
@@ -60,11 +58,7 @@ public class AuctionScheduler {
     private long getLastEventId(IAllegroNiceApi client) {
         Optional<Long> eventId = journalService.findLastProcessedJournalEventId(client.getClientId());
         long lastEventId;
-        if (eventId.isPresent()) {
-            lastEventId = eventId.get();
-        } else {
-            lastEventId = journalService.createLastProcessedJournalEventId(client.getClientId());
-        }
+        lastEventId = eventId.orElseGet(() -> journalService.createLastProcessedJournalEventId(client.getClientId()));
         return lastEventId;
     }
 

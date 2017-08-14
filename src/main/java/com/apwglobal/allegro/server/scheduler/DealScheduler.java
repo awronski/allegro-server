@@ -37,7 +37,7 @@ public class DealScheduler {
 
         client
                 .login()
-                .getDeals(lastEventId.orElse(0l))
+                .getDeals(lastEventId.orElse(0L))
                 .forEach(dealService::saveDeal);
     }
 

@@ -64,6 +64,6 @@ public class DealService implements IDealService {
         dealDao.createLastProcessedDealEventId(sellerId);
 
         logger.debug("Created Last processed deal event id for seller: {}", sellerId);
-        return 0l;
+        return 0L;
     }
 }

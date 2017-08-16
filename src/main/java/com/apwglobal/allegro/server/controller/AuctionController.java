@@ -62,8 +62,8 @@ public class AuctionController implements JsonpControllerAdvice, ClientIdAwareCo
 
     @RequestMapping(value = "/auctions/create", method = RequestMethod.POST)
     @ResponseBody
-    public CreatedAuction create(@RequestBody List<AuctionField> fields) {
-        return auctionService.createNewAuction(getClientId(), fields);
+    public CreatedAuction create(@RequestBody NewAuction newAuction) {
+        return auctionService.createNewAuction(getClientId(), newAuction);
     }
 
     @RequestMapping(value = "/auctions/{itemId}/change", method = RequestMethod.PUT)

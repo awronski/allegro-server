@@ -118,11 +118,11 @@ public class AuctionService implements IAuctionService {
     }
 
     @Override
-    public CreatedAuction createNewAuction(long sellerId, List<AuctionField> fields) {
-        CreatedAuction newAuction = allegro.get(sellerId).createNewAuction(fields);
-        logger.debug("Created: {}", newAuction);
+    public CreatedAuction createNewAuction(long sellerId, NewAuction newAuction) {
+        CreatedAuction created = allegro.get(sellerId).createNewAuction(newAuction);
+        logger.debug("Created: {}", created);
 
-        return newAuction;
+        return created;
     }
 
     @Override

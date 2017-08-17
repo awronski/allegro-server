@@ -12,8 +12,12 @@ import java.util.Optional;
 @Controller
 public class AuctionController implements JsonpControllerAdvice, ClientIdAwareController {
 
+    private final IAuctionService auctionService;
+
     @Autowired
-    private IAuctionService auctionService;
+    public AuctionController(IAuctionService auctionService) {
+        this.auctionService = auctionService;
+    }
 
     @RequestMapping("/auctions")
     @ResponseBody
@@ -70,6 +74,12 @@ public class AuctionController implements JsonpControllerAdvice, ClientIdAwareCo
     @ResponseBody
     public ChangedAuctionInfo change(@PathVariable("itemId") long itemId, @RequestBody List<AuctionField> fields) {
         return auctionService.changeAuctionFields(getClientId(), itemId, fields);
+    }
+
+    @RequestMapping(value = "/auctions/sales-conditions", method = RequestMethod.GET)
+    @ResponseBody
+    public List<String> salesConditions() {
+        return auctionService.getSalesConditions(getClientId());
     }
 
 }

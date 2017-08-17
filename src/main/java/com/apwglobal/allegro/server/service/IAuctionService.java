@@ -22,4 +22,6 @@ public interface IAuctionService {
 
     void closeAuction(long sellerId, long itemId);
 
+    List<String> getSalesConditions(long sellerId);
+
 }

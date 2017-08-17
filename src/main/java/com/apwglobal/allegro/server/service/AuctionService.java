@@ -139,4 +139,9 @@ public class AuctionService implements IAuctionService {
         logger.debug("Finished: {}", itemId);
     }
 
+    @Override
+    public List<String> getSalesConditions(long sellerId) {
+        return allegro.get(sellerId).getSalesConditions();
+    }
+
 }

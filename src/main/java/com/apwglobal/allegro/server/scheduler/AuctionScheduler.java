@@ -49,7 +49,6 @@ public class AuctionScheduler {
         }
         logger.debug("Journals events to process {} for seller {}", journals.size(), client.getClientId());
 
-        client.login();
         journals.forEach(j -> processJournal(client, j));
 
         updateLastProcessedJournalEventId(journals);

@@ -36,7 +36,6 @@ public class DealScheduler {
         Optional<Long> lastEventId = dealService.findLastRowId(client.getClientId());
 
         client
-                .login()
                 .getDeals(lastEventId.orElse(0L))
                 .forEach(dealService::saveDeal);
     }

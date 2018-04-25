@@ -53,7 +53,6 @@ public class PaymentScheduler {
         }
 
         client
-                .login()
                 .getPayments(Observable.from(deals))
                 .forEach(paymentService::savePayment);
 

@@ -36,7 +36,6 @@ public class JournalScheduler {
         Optional<Long> lastRawId = journalService.findLastRowId(client.getClientId());
 
         client
-                .login()
                 .getJournal(lastRawId.orElse(0L))
                 .forEach(journalService::saveJournal);
     }

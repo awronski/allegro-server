@@ -32,7 +32,6 @@ public class IncomingPaymentScheduler {
 
     private void syncIncomingPaymentsForGivenClient(IAllegroNiceApi client) {
         client
-                .login()
                 .getIncomingPayments()
                 .forEach(incomingPaymentService::createIfNotExist);
     }

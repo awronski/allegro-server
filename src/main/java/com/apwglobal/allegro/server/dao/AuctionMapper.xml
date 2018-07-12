@@ -50,6 +50,11 @@
         WHERE id = #{id}
     </update>
 
+    <update id="updateAuctionLastSale" parameterType="map">
+        UPDATE auctions SET lastSellDate = #{eventTime}
+        WHERE id = #{itemId} AND sellerid = #{sellerId}
+    </update>
+
     <update id="updateAuctionExtraOptions" parameterType="map">
         UPDATE auctions SET extraOptions = #{extraOptions} WHERE id = #{itemId}
     </update>

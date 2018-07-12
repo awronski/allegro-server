@@ -3,6 +3,7 @@ package com.apwglobal.allegro.server.dao;
 import com.apwglobal.nice.domain.Auction;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +17,5 @@ public interface AuctionDao {
     void updateAuctionExtraOptions(@Param("itemId") long itemId, @Param("extraOptions") int extraOptions);
     void closeAuction(@Param("sellerId") long sellerId, @Param("itemId") long itemId);
 
+    void updateAuctionLastSale(@Param("sellerId") long sellerId, @Param("itemId") long itemId, @Param("eventTime") Date eventTime);
 }

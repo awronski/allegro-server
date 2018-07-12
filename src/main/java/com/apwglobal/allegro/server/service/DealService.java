@@ -1,7 +1,9 @@
 package com.apwglobal.allegro.server.service;
 
+import com.apwglobal.allegro.server.dao.AuctionDao;
 import com.apwglobal.allegro.server.dao.DealDao;
 import com.apwglobal.nice.domain.Deal;
+import com.apwglobal.nice.domain.DealType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class DealService implements IDealService {
 
     @Autowired
     private DealDao dealDao;
+
+    @Autowired
+    private AuctionDao auctionDao;
 
     @Override
     public Optional<Long> findLastProcessedDealEventId(long sellerId) {
@@ -48,8 +53,12 @@ public class DealService implements IDealService {
     @Override
     public void saveDeal(Deal deal) {
         dealDao.saveDeal(deal);
-
         logger.debug("Saved: {}", deal);
+
+        if (deal.getDealType().equals(DealType.PAYMENT)) {
+            auctionDao.updateAuctionLastSale(deal.getSellerId(), deal.getItemId(), deal.getEventTime());
+            logger.debug("Last sale of: {} from seller {}", deal.getItemId(), deal.getSellerId());
+        }
     }
 
     @Override
